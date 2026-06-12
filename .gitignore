@@ -1,3 +1,10 @@
+# ==========================================
+# 1. Ignore Build Outputs for All Modules
+# ==========================================
+**/target/
+build/
+bin/
+# =========================
 *.settings/
 **/bin/
 *.classpath
