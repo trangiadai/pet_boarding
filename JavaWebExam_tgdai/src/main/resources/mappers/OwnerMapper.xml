@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="training.javaweb.exam.dao.mapper.OwnerMapper">
+	<select id="getAllOwners" resultType="training.javaweb.exam.entity.Owner">
+		SELECT
+			o.id,
+			o.name,
+			o.phone,
+			o.email,
+			o.address,
+			o.created_at AS createdAt
+		FROM owners o
+	</select>
+
+</mapper>
