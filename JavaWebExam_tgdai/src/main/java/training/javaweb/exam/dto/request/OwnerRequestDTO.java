@@ -1,10 +1,12 @@
 package training.javaweb.exam.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
@@ -20,7 +22,7 @@ public class OwnerRequestDTO {
 	private String phone;
 
 	@Size(max = 100, message = "The maximun number characters for owner's email is 100")
-	@Email(message = "Owner's email can't be empty, and must be valid format example@email.com")
+	@Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "Owner's email must be valid format example@email.com")
 	@Schema(description = "The email of the owner", example = "example@email.com")
 	private String email;
 
@@ -33,17 +35,23 @@ public class OwnerRequestDTO {
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 
+	@NotNull(message = "The list of pets infomation of the owner can't be null")
+	@Schema(description = "The information of the owner's pets")
+	private List<PetRequestDTO> pets;
+
 	public OwnerRequestDTO() {
 		super();
 	}
 
-	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt) {
+	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt,
+			List<PetRequestDTO> pets) {
 		super();
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
+		this.pets = pets;
 	}
 
 	public String getName() {
@@ -84,6 +92,14 @@ public class OwnerRequestDTO {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public List<PetRequestDTO> getPetsRequest() {
+		return pets;
+	}
+
+	public void setPetsRequest(List<PetRequestDTO> petsRequest) {
+		this.pets = petsRequest;
 	}
 
 }

@@ -3,7 +3,7 @@ package training.javaweb.exam.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ErrorDetail {
-	@Schema(description = "A clear description detailing why the request failed", example = "Requested quantity (50) exceeds available stock (12)")
+	@Schema(description = "A clear description detailing why the request failed", example = "Requested owner's name (200) characters exceeds the limit (100)")
 	private final String message;
 	@Schema(description = "The specific Java exception class type that triggered this response", example = "IllegalArgumentException")
 	private final String errorType;

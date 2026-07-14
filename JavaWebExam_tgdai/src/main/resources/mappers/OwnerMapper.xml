@@ -12,5 +12,16 @@
 			o.created_at AS createdAt
 		FROM owners o
 	</select>
+	
+	<insert id="createOwner" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO owners (name, phone, email, address, created_at)
+		VALUE (
+			#{name},
+			#{phone},
+			#{email},
+			#{address},
+			#{createdAt}
+		)
+	</insert>
 
 </mapper>

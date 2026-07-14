@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
+import training.javaweb.exam.dto.request.OwnerRequestDTO;
 import training.javaweb.exam.dto.response.OwnerResponseDTO;
+import training.javaweb.exam.entity.Owner;
 import training.javaweb.exam.repository.OwnerRepository;
 
 @Service
@@ -19,6 +21,12 @@ public class OwnerService {
 		}).collect(Collectors.toList());
 
 		return ownerResponses;
+	}
+	
+	public OwnerResponseDTO createOwner(OwnerRequestDTO ownerRequest) {
+		Owner owner = OwnerMapperDTO.toOwner(ownerRequest);
+		
+		return OwnerMapperDTO.toOwnerResponse(ownerRepository.createOwner(owner))  ;
 	}
 
 	public OwnerService(OwnerRepository ownerRepository) {

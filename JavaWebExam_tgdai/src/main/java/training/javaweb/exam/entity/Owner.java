@@ -1,6 +1,7 @@
 package training.javaweb.exam.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Owner {
 	private Long id;
@@ -9,12 +10,13 @@ public class Owner {
 	private String email;
 	private String address;
 	private LocalDateTime createdAt;
+	private List<Pet> pets;
 
 	public Owner() {
 		super();
 	}
 
-	public Owner(Long id, String name, String phone, String email, String address, LocalDateTime createdAt) {
+	public Owner(Long id, String name, String phone, String email, String address, LocalDateTime createdAt, List<Pet> pets) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -22,6 +24,7 @@ public class Owner {
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
+		this.pets = pets;
 	}
 
 	public Long getId() {
@@ -70,6 +73,14 @@ public class Owner {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public List<Pet> getPets() {
+		return pets;
+	}
+
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
 	}
 
 }

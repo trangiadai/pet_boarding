@@ -1,13 +1,9 @@
 package training.javaweb.exam.dto.response;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
 
 public class OwnerResponseDTO {
 	@Schema(description = "The name of the owner", example = "Tran Van A")
@@ -21,17 +17,22 @@ public class OwnerResponseDTO {
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 
+	@Schema(description = "The information of the owner's pets")
+	private List<PetResponseDTO> pets;
+
 	public OwnerResponseDTO() {
 		super();
 	}
 
-	public OwnerResponseDTO(String name, String phone, String email, String address, LocalDateTime createdAt) {
+	public OwnerResponseDTO(String name, String phone, String email, String address, LocalDateTime createdAt,
+			List<PetResponseDTO> pets) {
 		super();
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
+		this.pets = pets;
 	}
 
 	public String getName() {
@@ -72,6 +73,14 @@ public class OwnerResponseDTO {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public List<PetResponseDTO> getPets() {
+		return pets;
+	}
+
+	public void setPets(List<PetResponseDTO> pets) {
+		this.pets = pets;
 	}
 
 }

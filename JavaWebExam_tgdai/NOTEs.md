@@ -18,8 +18,24 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ...
+  - c8dd09415d
 - **Ref mục Quyết định thiết kế (nếu có):** Không có.
+
+### Day 2 — 14/07/2026
+- **Đã làm:**
+	- Adding method to create new owner
+	- Adding regex for email validation
+	- Change OwnerResponse, Owner entity, OwnerRequest to add new field (pets)
+	- Adding Pet entity, PetResponseDTO, PetRequestDTO, PetMapperDTO
+	- Adding enum PetType
+	- Change example value of ErrorDetail
+	- Update NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ....
+- **Ref mục Quyết định thiết kế (nếu có):** Không có.
+
 
 
 ---
