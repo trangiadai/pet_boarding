@@ -31,14 +31,14 @@ public class PetMapperDTO {
 		}
 
 		Pet pet = new Pet();
-		pet.setName(pet.getName());
+		pet.setName(petRequest.getName());
 		pet.setType(petRequest.getType().name().toLowerCase());
-		pet.setBreed(pet.getBreed());
-		pet.setAge(pet.getAge());
-		pet.setWeight(pet.getWeight());
-		pet.setImageUrl(pet.getImageUrl());
-		pet.setOwnerId(pet.getOwnerId());
-		pet.setCreatedAt(pet.getCreatedAt());
+		pet.setBreed(petRequest.getBreed());
+		pet.setAge(petRequest.getAge());
+		pet.setWeight(petRequest.getWeight());
+		pet.setImageUrl(petRequest.getImageUrl());
+		pet.setOwnerId(petRequest.getOwnerId());
+		pet.setCreatedAt(petRequest.getCreatedAt());
 
 		return pet;
 	}

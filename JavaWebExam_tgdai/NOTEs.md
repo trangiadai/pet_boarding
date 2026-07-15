@@ -33,9 +33,28 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ....
+  - a8b08f04cd
 - **Ref mục Quyết định thiết kế (nếu có):** Không có.
 
+### Day 3 — 15/07/2026
+- **Đã làm:**
+	- Adding feature update owner information, searching owners by name or phone number, deleting owner
+	- Fixxing bug in PetMapperDTO
+	- Adding field "id" to OwnerResponseDTO
+	- Change OwnerMapperDTO to mapping owner's pets
+	- Fix bug in PetMapperDTO
+	- Fix bug validation of field createdAt of OwnerRequestDTO -> change from @NotBlank to @NotNull
+	- Adding regex pattern to validation field "phone" in OwnerRequestDTO 
+	- Delete field pets of OwnerRequestDTO
+	- Change database name (F-2 requirement)
+	- Remove redundant code
+	- Formatting code
+	- Update NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ...
+- **Ref mục Quyết định thiết kế (nếu có):** Không có.
 
 
 ---

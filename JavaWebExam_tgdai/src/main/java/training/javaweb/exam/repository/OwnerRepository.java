@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import training.javaweb.exam.dao.mapper.OwnerMapper;
-import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
-import training.javaweb.exam.dto.request.OwnerRequestDTO;
-import training.javaweb.exam.dto.response.OwnerResponseDTO;
 import training.javaweb.exam.entity.Owner;
 
 @Repository
@@ -27,14 +25,46 @@ public class OwnerRepository {
 		param.put("email", owner.getEmail());
 		param.put("address", owner.getAddress());
 		param.put("createdAt", owner.getCreatedAt());
-		
+
 		ownerMapper.createOwner(param);
 		Number generatedIdObj = (Number) param.get("id");
 		if (generatedIdObj != null) {
 			owner.setId(generatedIdObj.longValue());
 		}
-		
+
 		return owner;
+	}
+
+	public int updateOwner(Owner owner) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", owner.getId());
+		param.put("name", owner.getName());
+		param.put("phone", owner.getPhone());
+		param.put("email", owner.getEmail());
+		param.put("address", owner.getAddress());
+
+		return ownerMapper.updateOwner(param);
+	}
+
+	public Owner getOwnerById(Long id) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+
+		return ownerMapper.getOwnerById(param);
+	}
+
+	public List<Owner> searchOwners(String keyword) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("keyword", keyword);
+		return ownerMapper.searchOwners(param);
+	}
+
+	@Transactional
+	public int deleteOwnerById(Long id) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("ownerId", id);
+		// + petMapper.deletePetsByOwnerId(param);
+		return ownerMapper.deleteOwnerById(param);
 	}
 
 	public OwnerRepository(OwnerMapper ownerMapper) {

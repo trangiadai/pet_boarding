@@ -3,7 +3,7 @@
 -- Java Web Exam
 -- ================================================================
 
-CREATE DATABASE IF NOT EXISTS pet_boarding
+CREATE DATABASE IF NOT EXISTS pet_boarding_tgdai
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 

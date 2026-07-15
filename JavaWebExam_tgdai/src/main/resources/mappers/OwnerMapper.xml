@@ -2,15 +2,96 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="training.javaweb.exam.dao.mapper.OwnerMapper">
-	<select id="getAllOwners" resultType="training.javaweb.exam.entity.Owner">
+	<resultMap id="OwnerWithPetsMap" type="training.javaweb.exam.entity.Owner">
+		<id property="id" column="owner_id"/>
+		<result property="name" column="owner_name"/>
+		<result property="phone" column="owner_phone"/>
+		<result property="email" column="owner_email"/>
+		<result property="address" column="owner_address"/>
+		<result property="createdAt" column="owner_created_at"/>
+		
+		<collection property="pets" ofType="training.javaweb.exam.entity.Pet">
+			<id property="id" column="pet_id"/>
+			<result property="name" column="pet_name"/>
+			<result property="type" column="pet_type"/>
+			<result property="breed" column="pet_breed"/>
+			<result property="age" column="pet_age"/>
+			<result property="weight" column="pet_weight"/>
+			<result property="imageUrl" column="pet_image_url"/>
+			<result property="ownerId" column="pet_owner_id"/>
+			<result property="createdAt" column="pet_created_at"/>
+		</collection>
+	</resultMap>
+
+	<select id="getAllOwners" resultMap="OwnerWithPetsMap">
 		SELECT
-			o.id,
-			o.name,
-			o.phone,
-			o.email,
-			o.address,
-			o.created_at AS createdAt
+			o.id AS owner_id,
+			o.name AS owner_name,
+			o.phone AS owner_phone,
+			o.email AS owner_address,
+			o.address AS owner_address,
+			o.created_at AS owner_created_at,
+			
+			p.id AS pet_id,
+			p.name AS pet_name,
+			p.type AS pet_type,
+			p.breed AS pet_breed,
+			p.age AS pet_age,
+			p.weight AS pet_weight,
+			p.image_url AS pet_image_url,
+			p.owner_id AS pet_owner_id,
+			p.created_at AS pet_created_at
 		FROM owners o
+		LEFT JOIN pets p ON o.id = p.owner_id
+		ORDER BY o.id DESC
+	</select>
+	
+	<select id="getOwnerById" parameterType="map" resultMap="OwnerWithPetsMap">
+	    SELECT
+	        o.id AS owner_id,
+	        o.name AS owner_name,
+	        o.phone AS owner_phone,
+	        o.email AS owner_address,
+	        o.address AS owner_address,
+	        o.created_at AS owner_created_at,
+	        
+	        p.id AS pet_id,
+	        p.name AS pet_name,
+	        p.type AS pet_type,
+	        p.breed AS pet_breed,
+	        p.age AS pet_age,
+	        p.weight AS pet_weight,
+	        p.image_url AS pet_image_url,
+	        p.owner_id AS pet_owner_id,
+	        p.created_at AS pet_created_at
+	    FROM owners o
+	    LEFT JOIN pets p ON o.id = p.owner_id
+	    WHERE o.id = #{id}
+	</select>
+	
+	<select id="searchOwners" parameterType="map" resultMap="OwnerWithPetsMap">
+	    SELECT
+	        o.id AS owner_id,
+	        o.name AS owner_name,
+	        o.phone AS owner_phone,
+	        o.email AS owner_address,
+	        o.address AS owner_address,
+	        o.created_at AS owner_created_at,
+	        
+	        p.id AS pet_id,
+	        p.name AS pet_name,
+	        p.type AS pet_type,
+	        p.breed AS pet_breed,
+	        p.age AS pet_age,
+	        p.weight AS pet_weight,
+	        p.image_url AS pet_image_url,
+	        p.owner_id AS pet_owner_id,
+	        p.created_at AS pet_created_at
+	    FROM owners o
+	    LEFT JOIN pets p ON o.id = p.owner_id
+	    WHERE o.name LIKE CONCAT('%', #{keyword}, '%')
+	       OR o.phone LIKE CONCAT('%', #{keyword}, '%')
+	    ORDER BY o.id DESC
 	</select>
 	
 	<insert id="createOwner" parameterType="map" useGeneratedKeys="true" keyProperty="id">
@@ -23,5 +104,19 @@
 			#{createdAt}
 		)
 	</insert>
+	
+	<update id="updateOwner" parameterType="map">
+	    UPDATE owners o
+	    SET
+	        o.name = #{name},
+	        o.phone = #{phone},
+	        o.email = #{email},
+	        o.address = #{address}
+	    WHERE o.id = #{id}
+	</update>
+	
+	<delete id="deleteOwnerById" parameterType="map">
+		DELETE FROM owners WHERE id = #{ownerId}
+	</delete>
 
 </mapper>

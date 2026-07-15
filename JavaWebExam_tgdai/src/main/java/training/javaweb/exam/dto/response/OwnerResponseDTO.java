@@ -6,6 +6,8 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class OwnerResponseDTO {
+	@Schema(description = "The id of the owner", example = "12")
+	private Long id;
 	@Schema(description = "The name of the owner", example = "Tran Van A")
 	private String name;
 	@Schema(description = "The phone number of the owner", example = "0123456789")
@@ -24,15 +26,24 @@ public class OwnerResponseDTO {
 		super();
 	}
 
-	public OwnerResponseDTO(String name, String phone, String email, String address, LocalDateTime createdAt,
+	public OwnerResponseDTO(Long id, String name, String phone, String email, String address, LocalDateTime createdAt,
 			List<PetResponseDTO> pets) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
 		this.pets = pets;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

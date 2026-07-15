@@ -1,13 +1,13 @@
 package training.javaweb.exam.dto.request;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class OwnerRequestDTO {
@@ -18,6 +18,7 @@ public class OwnerRequestDTO {
 
 	@NotBlank(message = "Owner's phone can't not be empty or just a space/tab")
 	@Size(min = 10, max = 20, message = "The minimun number for owner's phone is 10, and the maximun number for owner's phone is 20")
+	@Pattern(regexp = "^[0-9]+$", message = "Phone number must contain only numbers")
 	@Schema(description = "The phone number of the owner", example = "0123456789")
 	private String phone;
 
@@ -30,28 +31,22 @@ public class OwnerRequestDTO {
 	@Schema(description = "The address of the owner", example = "123 ABC, Q4, TP.HCM")
 	private String address;
 
-	@NotBlank(message = "Owner's createdAt can't not be empty or just a space/tab")
+	@NotNull(message = "Owner's createdAt can't not be empty")
 	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
-
-	@NotNull(message = "The list of pets infomation of the owner can't be null")
-	@Schema(description = "The information of the owner's pets")
-	private List<PetRequestDTO> pets;
 
 	public OwnerRequestDTO() {
 		super();
 	}
 
-	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt,
-			List<PetRequestDTO> pets) {
+	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt) {
 		super();
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
-		this.pets = pets;
 	}
 
 	public String getName() {
@@ -93,13 +88,4 @@ public class OwnerRequestDTO {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-
-	public List<PetRequestDTO> getPetsRequest() {
-		return pets;
-	}
-
-	public void setPetsRequest(List<PetRequestDTO> petsRequest) {
-		this.pets = petsRequest;
-	}
-
 }
