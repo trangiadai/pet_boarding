@@ -8,6 +8,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -20,8 +21,7 @@ public class PetRequestDTO {
 	@Schema(description = "The name of the pet", example = "Kiki")
 	private String name;
 
-	@NotBlank(message = "Pet's type can't not be empty or invalid value")
-	@Size(max = 20, message = "The maximun characters for pet's type is 20")
+	@NotNull(message = "Pet's type can't not be empty or invalid value")
 	@Schema(description = "The type of pet", example = "CAT")
 	private PetType type;
 
@@ -29,13 +29,13 @@ public class PetRequestDTO {
 	@Schema(description = "The breed of pet", example = "Golden Retriever Cat")
 	private String breed;
 
-	@NotBlank(message = "Pet's age can't not be empty or invalid value")
+	@NotNull(message = "Pet's age can't not be empty")
 	@PositiveOrZero(message = "Pet's age must be >= 0")
 	@Max(value = 500, message = "the maximun age of pet that the store can accept is 500")
 	@Schema(description = "The age of pet", example = "3")
 	private Integer age;
 
-	@NotBlank(message = "Pet's weight can't not be empty or invalid value")
+	@NotNull(message = "Pet's weight can't not be empty or invalid value")
 	@DecimalMin(value = "0.01", message = "The minimun weight of pet that the store can accept is 0,01")
 	@DecimalMax(value = "999.99", message = "The maximun weight of pet that the store can accept is 999,99")
 	@Schema(description = "The weight of pet", example = "2.10")
@@ -45,12 +45,12 @@ public class PetRequestDTO {
 	@Schema(description = "The image of pet", example = "https://placedog.net/200/200?id=1")
 	private String imageUrl;
 
-	@NotBlank(message = "Owner's id can't not be empty or invalid value")
+	@NotNull(message = "Owner's id can't not be empty or invalid value")
 	@Positive(message = "Owner's id must be > 0")
 	@Schema(description = "The id of owner of the pet", example = "1")
 	private Long ownerId;
 
-	@NotBlank(message = "Pet's createdAt can't not be empty or invalid value")
+	@NotNull(message = "Pet's createdAt can't not be empty")
 	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
 	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;

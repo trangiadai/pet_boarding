@@ -1,0 +1,91 @@
+package training.javaweb.exam.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import training.javaweb.exam.dto.mapper.PetMapperDTO;
+import training.javaweb.exam.dto.request.PetRequestDTO;
+import training.javaweb.exam.dto.response.PetResponseDTO;
+import training.javaweb.exam.entity.Pet;
+import training.javaweb.exam.enums.PetType;
+import training.javaweb.exam.repository.PetRepository;
+
+@Service
+public class PetService {
+	private PetRepository petRepository;
+	
+	public PetResponseDTO createPet(PetRequestDTO petRequest) {
+		return PetMapperDTO.toPetResponse(petRepository.createPet(PetMapperDTO.toPet(petRequest)));
+	}
+	
+	public List<PetResponseDTO> getAllPets() {
+		return petRepository.getAllPets().stream().map(pet -> {
+			return PetMapperDTO.toPetResponse(pet);
+		}).collect(Collectors.toList());
+	}
+
+
+    public PetResponseDTO getPetById(Long id){
+       return PetMapperDTO.toPetResponse(petRepository.getPetById(id)); 
+    }
+
+    @Transactional
+    public PetResponseDTO updatePetById(Long id, PetRequestDTO petRequest){
+        Pet existingPet = petRepository.getPetById(id);
+        if (existingPet == null) {
+            throw new RuntimeException("Pet with ID " + id + " not found.");
+        }
+
+        existingPet.setName(petRequest.getName());
+        existingPet.setType(petRequest.getType().name().toLowerCase());
+        existingPet.setBreed(petRequest.getBreed());
+        existingPet.setAge(petRequest.getAge());
+        existingPet.setWeight(petRequest.getWeight());
+        existingPet.setImageUrl(petRequest.getImageUrl());
+        existingPet.setOwnerId(petRequest.getOwnerId());
+
+        petRepository.updatePetById(existingPet);
+        return PetMapperDTO.toPetResponse(petRepository.getPetById(existingPet.getId()));
+    }
+    
+    @Transactional
+    public int deletePetById(Long id){
+    	//TODO: adding delete boarding record when delete pet, and sum total the number of row is affected 
+        Pet existing = petRepository.getPetById(id);
+        if (existing == null) {
+            throw new RuntimeException("Pet with ID " + id + " not found.");
+        }
+        return petRepository.deletePetById(id);
+    }
+    
+
+    public List<PetResponseDTO> findPetsFiltered(List<String> rawTypes){
+    	List<String> types = new ArrayList<>();
+    	if(rawTypes != null && !rawTypes.isEmpty()) {
+    		for(String rawType : rawTypes) {
+    			if(rawType != null && !rawType.isEmpty()) {
+    				try{
+    					PetType type = PetType.valueOf(rawType.trim().toUpperCase());
+    					types.add(type.name());
+    				}catch(IllegalArgumentException e) {
+    					throw new IllegalArgumentException("Unknown pet's type: " + rawType);
+    				}
+    				
+    			}
+    		}	
+    	}
+    	
+		return petRepository.findPetsFiltered(types).stream().map(pet -> {
+			return PetMapperDTO.toPetResponse(pet);
+		}).collect(Collectors.toList());
+    }
+    
+    public PetService(PetRepository petRepository){
+        this.petRepository = petRepository;
+    }
+
+}

@@ -1,25 +1,16 @@
 package training.javaweb.exam.service;
 
-import java.security.MessageDigest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import ch.qos.logback.classic.pattern.Util;
-import jakarta.validation.Valid;
 import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
 import training.javaweb.exam.dto.request.OwnerRequestDTO;
 import training.javaweb.exam.dto.response.OwnerResponseDTO;
 import training.javaweb.exam.entity.Owner;
 import training.javaweb.exam.repository.OwnerRepository;
-import training.javaweb.exam.utils.Helper;
 
 @Service
 public class OwnerService {
@@ -31,6 +22,11 @@ public class OwnerService {
 		}).collect(Collectors.toList());
 
 		return ownerResponses;
+	}
+
+	public OwnerResponseDTO getOwnerById(Long id) {
+
+		return OwnerMapperDTO.toOwnerResponse(ownerRepository.getOwnerById(id));
 	}
 
 	public OwnerResponseDTO createOwner(OwnerRequestDTO ownerRequest) {

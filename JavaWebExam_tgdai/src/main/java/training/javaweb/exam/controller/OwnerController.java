@@ -36,6 +36,13 @@ public class OwnerController {
 		return ownerService.getAllOwners();
 	}
 
+	@GetMapping("/{id}")
+	@Operation(summary = "A3. Xem chi tiết (kèm danh sách thú cưng)")
+	@ApiResponse(responseCode = "200", description = "Get owner's detail completed.")
+	public OwnerResponseDTO getOwnerById(@PathVariable Long id) {
+		return ownerService.getOwnerById(id);
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@Operation(summary = "A1. Thêm chủ nuôi mới")

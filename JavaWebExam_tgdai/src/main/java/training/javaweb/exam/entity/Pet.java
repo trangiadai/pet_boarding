@@ -13,9 +13,10 @@ public class Pet {
 	private String imageUrl;
 	private Long ownerId;
 	private LocalDateTime createdAt;
+	private Owner owner;
 
 	public Pet(Long id, String name, String type, String breed, Integer age, BigDecimal weight, String imageUrl,
-			Long ownerId, LocalDateTime createdAt) {
+			Long ownerId, LocalDateTime createdAt, Owner owner) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -26,6 +27,7 @@ public class Pet {
 		this.imageUrl = imageUrl;
 		this.ownerId = ownerId;
 		this.createdAt = createdAt;
+		this.owner = owner;
 	}
 
 	public Pet() {
@@ -103,6 +105,14 @@ public class Pet {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Owner getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Owner owner) {
+		this.owner = owner;
 	}
 
 }

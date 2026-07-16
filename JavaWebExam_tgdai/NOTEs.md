@@ -23,13 +23,13 @@ Branch: `java-web/exam`
 
 ### Day 2 — 14/07/2026
 - **Đã làm:**
-	- Adding method to create new owner
-	- Adding regex for email validation
-	- Change OwnerResponse, Owner entity, OwnerRequest to add new field (pets)
-	- Adding Pet entity, PetResponseDTO, PetRequestDTO, PetMapperDTO
-	- Adding enum PetType
-	- Change example value of ErrorDetail
-	- Update NOTEs.md
+	- Thêm vào chức năng tạo owner
+	- Thêm regex để kiểm tra cấu trúc email được input
+	- Thay đổi OwnerResponse, Owner entity, OwnerRequest (thêm field "pets")
+	- Thêm Pet entity, PetResponseDTO, PetRequestDTO, PetMapperDTO
+	- Thêm enum PetType
+	- Thay đổi giá trị mẩu của ErrorDetail
+	- Cập nhật NOTEs.md
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
@@ -38,18 +38,36 @@ Branch: `java-web/exam`
 
 ### Day 3 — 15/07/2026
 - **Đã làm:**
-	- Adding feature update owner information, searching owners by name or phone number, deleting owner
-	- Fixxing bug in PetMapperDTO
-	- Adding field "id" to OwnerResponseDTO
-	- Change OwnerMapperDTO to mapping owner's pets
-	- Fix bug in PetMapperDTO
-	- Fix bug validation of field createdAt of OwnerRequestDTO -> change from @NotBlank to @NotNull
-	- Adding regex pattern to validation field "phone" in OwnerRequestDTO 
-	- Delete field pets of OwnerRequestDTO
-	- Change database name (F-2 requirement)
-	- Remove redundant code
+	- Adding feature 
+	- Thêm tính năng update owner information, searching owners bởi name hoặc phone number, deleting owner
+	- Fix bug trong PetMapperDTO
+	- Thêm field "id" vào OwnerResponseDTO
+	- Thay đổi OwnerMapperDTO để mapping field pets
+	- Fix bug trong PetMapperDTO
+	- Fix bug về validation của field createdAt trong OwnerRequestDTO(thay đổi từ @NotBlank sang @NotNull)
+	- Thêm regex pattern để validate field "phone" trong OwnerRequestDTO 
+	- Xóa field pets trong OwnerRequestDTO
+	- Đổi tên database (requirement F-2)
+	- Loại bỏ code dư thừa
 	- Formatting code
-	- Update NOTEs.md
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - 3e3c441607
+- **Ref mục Quyết định thiết kế (nếu có):** Không có.
+
+### Day 4 — 16/07/2026
+- **Đã làm:**
+	- Thêm chức năng thêm thú cưng, hiển thị danh sách thú cưng, xem chi tiết thông tin thú cưng, cập nhật thông tin thú cưng, xóa thú cưng, hiển thị danh sách thú cưng đã 	được lọc theo loại
+	- Thay đổi vài kiểu validation trong PetRequestDTO
+	- Thay đổi field của entity Pet (thêm field "owner" để lấy ra chi tiết thông tin của owner của pet)
+	- Thay đổi PetMapDTO cho phù hợp với entity Pet
+	- Thêm enum PetStatus
+	- Thêm chức năng lấy thông tin chi tiết của 1 owner
+	- Loại bỏ code dư thừa
+	- Formating code
+	- Cập nhật NOTEs.md
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**

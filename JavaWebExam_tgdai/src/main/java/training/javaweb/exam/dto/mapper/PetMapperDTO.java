@@ -21,6 +21,7 @@ public class PetMapperDTO {
 		petResponse.setImageUrl(pet.getImageUrl());
 		petResponse.setOwnerId(pet.getOwnerId());
 		petResponse.setCreatedAt(pet.getCreatedAt());
+		petResponse.setOwner(OwnerMapperDTO.toOwnerResponse(pet.getOwner()));
 
 		return petResponse;
 	}
