@@ -20,4 +20,5 @@ public interface OwnerMapper {
 	List<Owner> searchOwners(Map<String, Object> param);
 
 	int deleteOwnerById(Map<String, Object> param);
+
 }

@@ -8,16 +8,19 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import training.javaweb.exam.dao.mapper.OwnerMapper;
+import training.javaweb.exam.dao.mapper.PetMapper;
 import training.javaweb.exam.entity.Owner;
 
 @Repository
 public class OwnerRepository {
 	private final OwnerMapper ownerMapper;
+	private final PetMapper petMapper;
 
 	public List<Owner> getAllOwners() {
 		return ownerMapper.getAllOwners();
 	}
 
+	@Transactional
 	public Owner createOwner(Owner owner) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("name", owner.getName());
@@ -63,12 +66,15 @@ public class OwnerRepository {
 	public int deleteOwnerById(Long id) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("ownerId", id);
-		// + petMapper.deletePetsByOwnerId(param);
-		return ownerMapper.deleteOwnerById(param);
+	    int deletedPetsCount = petMapper.deletePetsByOwnerId(param); // Delete child records first to satisfy foreign key constraints
+	    int deletedOwnerCount = ownerMapper.deleteOwnerById(param);
+	    
+	    return deletedOwnerCount + deletedPetsCount;
 	}
-
-	public OwnerRepository(OwnerMapper ownerMapper) {
+	
+	public OwnerRepository(OwnerMapper ownerMapper, PetMapper petMapper) {
 		super();
 		this.ownerMapper = ownerMapper;
+		this.petMapper = petMapper;
 	}
 }

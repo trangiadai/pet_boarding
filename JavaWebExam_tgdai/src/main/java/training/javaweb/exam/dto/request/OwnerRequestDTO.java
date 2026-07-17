@@ -36,17 +36,22 @@ public class OwnerRequestDTO {
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 
+	@Schema(description = "The account information of owner")
+	private UserRequestDTO userRequest;
+
 	public OwnerRequestDTO() {
 		super();
 	}
 
-	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt) {
+	public OwnerRequestDTO(String name, String phone, String email, String address, LocalDateTime createdAt,
+			UserRequestDTO userRequest) {
 		super();
 		this.name = name;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
+		this.userRequest = userRequest;
 	}
 
 	public String getName() {
@@ -88,4 +93,13 @@ public class OwnerRequestDTO {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public UserRequestDTO getUserRequest() {
+		return userRequest;
+	}
+
+	public void setUserRequest(UserRequestDTO userRequest) {
+		this.userRequest = userRequest;
+	}
+
 }

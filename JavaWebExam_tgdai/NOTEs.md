@@ -38,8 +38,7 @@ Branch: `java-web/exam`
 
 ### Day 3 — 15/07/2026
 - **Đã làm:**
-	- Adding feature 
-	- Thêm tính năng update owner information, searching owners bởi name hoặc phone number, deleting owner
+	- Thêm chức năng cập nhật thông tin của owner, tìm kiếm owners bởi tên hoặc số điện thoại, xóa owner
 	- Fix bug trong PetMapperDTO
 	- Thêm field "id" vào OwnerResponseDTO
 	- Thay đổi OwnerMapperDTO để mapping field pets
@@ -71,9 +70,25 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ...
+  - ac0da7aae1
 - **Ref mục Quyết định thiết kế (nếu có):** Không có.
 
+### Day 5 — 17/07/2026
+- **Đã làm:**
+	- Thêm chức năng thêm thú cưng, hiển thị danh sách thú cưng, xem chi tiết thông tin thú cưng, cập nhật thông tin thú cưng, xóa thú cưng, hiển thị danh sách thú cưng đã 	được lọc theo loại
+	- Cài đặt cấu hình cho Open API (OpenApiConfig) và SecurityConfig để có thể truy cập vào các api endpoint của dự án thông qua SwaggerAPI
+	- Thêm method deletePetsByOwnerId trong PetMapper inteface để triển khai tính năng nhất quán dữ liệu (khi xóa owner sẽ xóa luôn những pet của owner đó)
+	- Thêm api tạo tài khoản cho owner
+	- Thêm api tìm kiếm pet bằng tên owner
+	- Thêm thêm spring security vào pom.xml
+	- Loại bỏ code dư thừa
+	- Formating code
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ...
+- **Ref mục Quyết định thiết kế (nếu có):** Không có.
 
 ---
 

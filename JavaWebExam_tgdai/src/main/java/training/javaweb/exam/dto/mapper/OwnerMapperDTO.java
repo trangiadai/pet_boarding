@@ -44,6 +44,9 @@ public class OwnerMapperDTO {
 		owner.setEmail(ownerRequest.getEmail());
 		owner.setAddress(ownerRequest.getAddress());
 		owner.setCreatedAt(ownerRequest.getCreatedAt());
+		if(ownerRequest.getUserRequest() != null) {
+			owner.setUser(UserMapperDTO.toUser(ownerRequest.getUserRequest()));
+		}
 
 		return owner;
 	}

@@ -75,6 +75,14 @@ public class PetController {
         return petService.findPetsFiltered(rawTypes);
     }
     
+    @GetMapping("/search")
+    @Operation(summary = "B7. Tìm thú cưng theo chủ nuôi")
+    @ApiResponse(responseCode = "200", description = "Successfully search all information of pets by owner name")
+    public List<PetResponseDTO> searchPetByOwnerName(@RequestParam(required = false) String name){
+        return petService.searchPetByOwnerName(name);
+    }
+    
+    
     public PetController(PetService petService){
         this.petService = petService;
     }

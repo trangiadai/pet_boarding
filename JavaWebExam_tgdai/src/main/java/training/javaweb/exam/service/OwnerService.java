@@ -9,12 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
 import training.javaweb.exam.dto.request.OwnerRequestDTO;
 import training.javaweb.exam.dto.response.OwnerResponseDTO;
+import training.javaweb.exam.dto.response.UserResponseDTO;
 import training.javaweb.exam.entity.Owner;
+import training.javaweb.exam.entity.User;
 import training.javaweb.exam.repository.OwnerRepository;
 
 @Service
 public class OwnerService {
 	private final OwnerRepository ownerRepository;
+	private final UserService userService;
 
 	public List<OwnerResponseDTO> getAllOwners() {
 		List<OwnerResponseDTO> ownerResponses = ownerRepository.getAllOwners().stream().map(owner -> {
@@ -29,10 +32,15 @@ public class OwnerService {
 		return OwnerMapperDTO.toOwnerResponse(ownerRepository.getOwnerById(id));
 	}
 
+	@Transactional
 	public OwnerResponseDTO createOwner(OwnerRequestDTO ownerRequest) {
 		Owner owner = OwnerMapperDTO.toOwner(ownerRequest);
-
-		return OwnerMapperDTO.toOwnerResponse(ownerRepository.createOwner(owner));
+		//Question for next day: Do I need to check if create is success?
+		OwnerResponseDTO ownerReponse = OwnerMapperDTO.toOwnerResponse(ownerRepository.createOwner(owner));
+		userService.createCustomerAccount(ownerRequest.getUserRequest());
+		//set user account for owner response
+		
+		return ownerReponse;
 	}
 
 	@Transactional
@@ -66,9 +74,10 @@ public class OwnerService {
 		return ownerRepository.deleteOwnerById(id);
 	}
 
-	public OwnerService(OwnerRepository ownerRepository) {
+	public OwnerService(OwnerRepository ownerRepository, UserService userService) {
 		super();
 		this.ownerRepository = ownerRepository;
+		this.userService = userService;
 	}
 
 }

@@ -118,5 +118,21 @@
 	<delete id="deleteOwnerById" parameterType="map">
 		DELETE FROM owners WHERE id = #{ownerId}
 	</delete>
+	
+	<insert id="createUserAccount" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO users (username, password, role, owner_id, enabled, created_at)
+	    VALUES (
+	        #{username},
+	        #{password},
+	        #{role},
+	        #{ownerId},
+	        #{enabled},
+	        #{createdAt}
+	    )
+	</insert>
+
+	<select id="countUserByUsername" parameterType="map" resultType="int">
+	    SELECT COUNT(*) FROM users WHERE username = #{username}
+	</select>
 
 </mapper>

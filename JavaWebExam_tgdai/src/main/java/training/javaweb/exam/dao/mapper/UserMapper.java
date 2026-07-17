@@ -1,0 +1,12 @@
+package training.javaweb.exam.dao.mapper;
+
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface UserMapper {
+    int createUserAccount(Map<String, Object> param);
+
+    int countUserByUsername(Map<String, Object> param);
+}

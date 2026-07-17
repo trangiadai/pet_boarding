@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="training.javaweb.exam.dao.mapper.UserMapper">
+	<insert id="createUserAccount" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO users (username, password, role, owner_id, enabled, created_at)
+	    VALUES (
+	        #{username},
+	        #{password},
+	        #{role},
+	        #{ownerId},
+	        #{enabled},
+	        #{createdAt}
+	    )
+	</insert>
+
+	<select id="countUserByUsername" parameterType="map" resultType="int">
+	    SELECT COUNT(*) FROM users WHERE username = #{username}
+	</select>
+
+</mapper>
