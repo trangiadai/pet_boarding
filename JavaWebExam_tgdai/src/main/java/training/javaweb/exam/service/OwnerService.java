@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
 import training.javaweb.exam.dto.request.OwnerRequestDTO;
+import training.javaweb.exam.dto.request.UserRequestDTO;
 import training.javaweb.exam.dto.response.OwnerResponseDTO;
 import training.javaweb.exam.dto.response.UserResponseDTO;
 import training.javaweb.exam.entity.Owner;
@@ -35,12 +36,15 @@ public class OwnerService {
 	@Transactional
 	public OwnerResponseDTO createOwner(OwnerRequestDTO ownerRequest) {
 		Owner owner = OwnerMapperDTO.toOwner(ownerRequest);
-		//Question for next day: Do I need to check if create is success?
 		OwnerResponseDTO ownerReponse = OwnerMapperDTO.toOwnerResponse(ownerRepository.createOwner(owner));
-		userService.createCustomerAccount(ownerRequest.getUserRequest());
-		//set user account for owner response
-		
-		return ownerReponse;
+
+		UserRequestDTO userRequest = ownerRequest.getUserRequest();
+		if (userRequest != null) {
+			userRequest.setOwnerId(ownerReponse.getId());
+			userService.createCustomerAccount(userRequest);
+		}
+
+		return OwnerMapperDTO.toOwnerResponse(ownerRepository.getOwnerById(ownerReponse.getId()));
 	}
 
 	@Transactional
@@ -54,7 +58,6 @@ public class OwnerService {
 		existingOwner.setPhone(ownerRequest.getPhone());
 		existingOwner.setEmail(ownerRequest.getEmail());
 		existingOwner.setAddress(ownerRequest.getAddress());
-
 		ownerRepository.updateOwner(existingOwner);
 		return OwnerMapperDTO.toOwnerResponse(ownerRepository.getOwnerById(id));
 	}

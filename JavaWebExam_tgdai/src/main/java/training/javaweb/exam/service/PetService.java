@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import training.javaweb.exam.dto.mapper.PetMapperDTO;
 import training.javaweb.exam.dto.request.PetRequestDTO;
@@ -20,6 +19,11 @@ public class PetService {
 	private PetRepository petRepository;
 
 	public PetResponseDTO createPet(PetRequestDTO petRequest) {
+		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getOwnerId());
+		if (pet != null) {
+			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
+		}
+
 		return PetMapperDTO.toPetResponse(petRepository.createPet(PetMapperDTO.toPet(petRequest)));
 	}
 
@@ -38,6 +42,11 @@ public class PetService {
 		Pet existingPet = petRepository.getPetById(id);
 		if (existingPet == null) {
 			throw new RuntimeException("Pet with ID " + id + " not found.");
+		}
+
+		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getOwnerId());
+		if (pet != null) {
+			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
 		}
 
 		existingPet.setName(petRequest.getName());

@@ -43,16 +43,17 @@ CREATE TABLE pets (
 -- TABLE: boarding_records
 -- ================================================================
 CREATE TABLE boarding_records (
-    id               BIGINT      NOT NULL AUTO_INCREMENT,
-    pet_id           BIGINT      NOT NULL,
-    check_in_date    DATE        NOT NULL,
-    actual_check_out DATE,
-    base_fee         BIGINT,
-    late_fee         BIGINT      DEFAULT 0,
-    total_fee        BIGINT,
-    status           VARCHAR(20) NOT NULL DEFAULT 'BOARDING', -- BOARDING | RETURNED
-    notes            TEXT,
-    created_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id               	BIGINT      NOT NULL AUTO_INCREMENT,
+    pet_id           	BIGINT      NOT NULL,
+    check_in_date    	DATE        NOT NULL,
+    expected_check_out	DATE		NOT NULL,
+    actual_check_out 	DATE,
+    base_fee         	BIGINT,
+    late_fee         	BIGINT      DEFAULT 0,
+    total_fee        	BIGINT,
+    status           	VARCHAR(20) NOT NULL DEFAULT 'BOARDING', -- BOARDING | RETURNED
+    notes            	TEXT,
+    created_at       	DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     CONSTRAINT fk_boarding_pet FOREIGN KEY (pet_id) REFERENCES pets(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -112,39 +113,39 @@ INSERT INTO pets (id, name, type, breed, age, weight, image_url, owner_id) VALUE
 -- ── Boarding Records ────────────────────────────────────────────
 -- Record 1: Milo đang gửi (BOARDING) — base_fee/total_fee NULL vì chưa check-out
 INSERT INTO boarding_records
-    (id, pet_id, check_in_date, actual_check_out,
+    (id, pet_id, check_in_date, expected_check_out, actual_check_out,
      base_fee, late_fee, total_fee, status, notes)
 VALUES
-(1, 1, '2025-05-20', NULL,
+(1, 1, '2025-05-20', '2025-05-25',  NULL,
  NULL, 0, NULL, 'BOARDING', 'Cho ăn 2 lần/ngày, không ăn xúc xích'),
 
 -- Record 2: Buddy đang gửi (BOARDING)
-(2, 3, '2025-05-18', NULL,
+(2, 3, '2025-05-18', '2025-05-23', NULL,
  NULL, 0, NULL, 'BOARDING', 'Dị ứng thức ăn có gà'),
 
 -- Record 3: Snow đang gửi (BOARDING)
-(3, 5, '2025-05-21', NULL,
+(3, 5, '2025-05-21', '2025-05-26', NULL,
  NULL, 0, NULL, 'BOARDING', 'Cho ăn rau cải, cà rốt'),
 
 -- Record 4: Max đã trả đúng hạn (RETURNED, không trễ, không discount)
-(4, 6, '2025-05-15', '2025-05-22',
+(4, 6, '2025-05-15', '2025-05-22', '2025-05-22',
  1260000, 0, 1260000, 'RETURNED', ''),
 
 -- Record 5: Kiki đã trả trễ 2 ngày (RETURNED, có late fee)
 -- base_fee = 900000, late_fee = 40000, total = 940000
-(5, 2, '2025-05-10', '2025-05-19',
+(5, 2, '2025-05-10', '2025-05-17', '2025-05-19',
  900000, 40000, 940000, 'RETURNED', 'Hay trốn, cẩn thận cửa'),
 
 -- Record 6: Luna đã trả đúng hạn (RETURNED)
-(6, 7, '2025-05-01', '2025-05-10',
+(6, 7, '2025-05-01', '2025-05-10', '2025-05-10',
  900000, 0, 900000, 'RETURNED', ''),
 
 -- Record 7: Tweety đã trả đúng hạn (RETURNED)
-(7, 4, '2025-04-10', '2025-04-17',
+(7, 4, '2025-04-10', '2025-04-17', '2025-04-17',
  420000, 0, 420000, 'RETURNED', ''),
 
 -- Record 8: Buddy lần trước — đúng hạn (RETURNED)
-(8, 3, '2025-03-01', '2025-03-06',
+(8, 3, '2025-03-01', '2025-03-06', '2025-03-06',
  600000, 0, 600000, 'RETURNED', 'Lần đầu gửi');
 
 -- ── Care Notes ──────────────────────────────────────────────────
@@ -196,3 +197,7 @@ INSERT INTO users (id, username, password, role, owner_id) VALUES
 --              username=0912345678    / password=Test@1234  (Trần Thị Bình)
 --              username=0956789012    / password=Test@1234  (Võ Thị Phương)
 -- ================================================================
+
+drop table care_notes;
+Drop table boarding_records;
+

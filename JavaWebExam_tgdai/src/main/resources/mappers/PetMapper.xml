@@ -69,6 +69,29 @@
         WHERE p.id = #{id}
     </select>
 
+	<select id="getPetByPetNameAndOwnerId" parameterType="map" resultMap="PetWithOwnerResultMap">
+		SELECT
+			p.id AS pet_id,
+			p.name AS pet_name,
+			p.type AS pet_type,
+			p.breed AS pet_breed,
+			p.age AS pet_age,
+			p.weight AS pet_weight,
+			p.image_url AS pet_image_url,
+			p.owner_id AS pet_owner_id,
+			p.created_at AS pet_created_at,
+	
+			o.id AS owner_id,
+			o.name AS owner_name,
+			o.phone AS owner_phone,
+			o.email AS owner_email,
+			o.address AS owner_address,
+			o.created_at AS owner_created_at
+		FROM pets p
+		INNER JOIN owners o ON p.owner_id = o.id
+		WHERE p.name = #{petName} AND o.id = #{ownerId}
+	</select>
+
     <insert id="createPet" parameterType="map" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO pets (name, type, breed, age, weight, image_url, owner_id, created_at)
         VALUES (

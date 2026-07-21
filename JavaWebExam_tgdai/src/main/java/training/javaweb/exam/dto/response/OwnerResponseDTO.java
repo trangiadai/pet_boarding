@@ -18,7 +18,8 @@ public class OwnerResponseDTO {
 	private String address;
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
-
+	@Schema(description = "The account information of owner")
+	private UserResponseDTO userResponse;
 	@Schema(description = "The information of the owner's pets")
 	private List<PetResponseDTO> pets;
 
@@ -27,7 +28,7 @@ public class OwnerResponseDTO {
 	}
 
 	public OwnerResponseDTO(Long id, String name, String phone, String email, String address, LocalDateTime createdAt,
-			List<PetResponseDTO> pets) {
+			UserResponseDTO userResponse, List<PetResponseDTO> pets) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -35,6 +36,7 @@ public class OwnerResponseDTO {
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
+		this.userResponse = userResponse;
 		this.pets = pets;
 	}
 
@@ -84,6 +86,14 @@ public class OwnerResponseDTO {
 
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public UserResponseDTO getUserResponse() {
+		return userResponse;
+	}
+
+	public void setUserResponse(UserResponseDTO userResponse) {
+		this.userResponse = userResponse;
 	}
 
 	public List<PetResponseDTO> getPets() {

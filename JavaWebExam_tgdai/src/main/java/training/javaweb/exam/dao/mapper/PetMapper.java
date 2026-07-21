@@ -15,6 +15,8 @@ public interface PetMapper {
 
 	Pet getPetById(Map<String, Object> param);
 
+	Pet getPetByPetNameAndOwnerId(Map<String, Object> param);
+
 	int updatePetById(Map<String, Object> param);
 
 	int deletePetById(Map<String, Object> param);
@@ -22,7 +24,7 @@ public interface PetMapper {
 	List<Pet> findPetsFiltered(Map<String, Object> param);
 
 	List<Pet> searchPetByOwnerName(Map<String, Object> param);
-	
+
 	int deletePetsByOwnerId(Map<String, Object> param);
-	
+
 }

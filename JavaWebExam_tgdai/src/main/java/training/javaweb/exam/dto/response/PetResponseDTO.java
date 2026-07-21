@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import training.javaweb.exam.enums.PetStatus;
 import training.javaweb.exam.enums.PetType;
 
 public class PetResponseDTO {

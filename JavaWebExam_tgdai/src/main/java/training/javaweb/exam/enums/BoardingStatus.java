@@ -1,5 +1,5 @@
 package training.javaweb.exam.enums;
 
-public enum PetStatus {
+public enum BoardingStatus {
 	BOARDING, RETURNED;
 }

@@ -10,15 +10,15 @@ public class Owner {
 	private String email;
 	private String address;
 	private LocalDateTime createdAt;
-	private List<Pet> pets;
 	private User user;
+	private List<Pet> pets;
 
 	public Owner() {
 		super();
 	}
 
-	public Owner(Long id, String name, String phone, String email, String address, LocalDateTime createdAt,
-			List<Pet> pets, User user) {
+	public Owner(Long id, String name, String phone, String email, String address, LocalDateTime createdAt, User user,
+			List<Pet> pets) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -26,8 +26,8 @@ public class Owner {
 		this.email = email;
 		this.address = address;
 		this.createdAt = createdAt;
-		this.pets = pets;
 		this.user = user;
+		this.pets = pets;
 	}
 
 	public Long getId() {
@@ -78,20 +78,20 @@ public class Owner {
 		this.createdAt = createdAt;
 	}
 
-	public List<Pet> getPets() {
-		return pets;
-	}
-
-	public void setPets(List<Pet> pets) {
-		this.pets = pets;
-	}
-
 	public User getUser() {
 		return user;
 	}
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public List<Pet> getPets() {
+		return pets;
+	}
+
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
 	}
 
 }

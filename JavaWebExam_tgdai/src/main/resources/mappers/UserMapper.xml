@@ -18,4 +18,8 @@
 	    SELECT COUNT(*) FROM users WHERE username = #{username}
 	</select>
 
+	<delete id="deleteUserByOwnerId" parameterType="map">
+		DELETE FROM users WHERE owner_id = #{ownerId}
+	</delete>
+
 </mapper>

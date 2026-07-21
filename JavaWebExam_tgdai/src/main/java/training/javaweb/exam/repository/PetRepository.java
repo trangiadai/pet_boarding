@@ -3,12 +3,10 @@ package training.javaweb.exam.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import training.javaweb.exam.dao.mapper.PetMapper;
-import training.javaweb.exam.dto.response.PetResponseDTO;
 import training.javaweb.exam.entity.Pet;
 
 @Repository
@@ -42,6 +40,14 @@ public class PetRepository {
 		Map<String, Object> param = new HashMap<>();
 		param.put("id", id);
 		return petMapper.getPetById(param);
+	}
+
+	public Pet getPetByPetNameAndOwnerId(String petName, Long ownerId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("petName", petName);
+		param.put("ownerId", ownerId);
+
+		return petMapper.getPetByPetNameAndOwnerId(param);
 	}
 
 	public void updatePetById(Pet pet) {

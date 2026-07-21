@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserMapper {
-    int createUserAccount(Map<String, Object> param);
+	int createUserAccount(Map<String, Object> param);
 
-    int countUserByUsername(Map<String, Object> param);
+	int countUserByUsername(Map<String, Object> param);
+
+	int deleteUserByOwnerId(Map<String, Object> param);
 }

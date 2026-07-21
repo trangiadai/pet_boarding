@@ -87,13 +87,38 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ...
+  - 524772c974
 - **Ref mục Quyết định thiết kế (nếu có):** Không có.
+
+### Day 6 — 21/07/2026
+- **Đã làm:**
+	-  Adding method getPetByNameAndOwnerId to validation condition 1 owner can't have 2 pet with the same name(using in PetService)
+	-  Adding method deleteUserByOwnerId to delete user acccount when delete owner (also implement this in OwnerRepository)
+	-  Adding validation check null before using stream in OwnerMapperDTO
+	-  Adding field userResponse to return user account in OwnerResponseDTO
+	-  dding create user account when create owner
+	-  Adding BoardingRecord,  BoardingRecordRequestDTO, BoardingRecordResponseDTO, BoardingRecordMapperDTO
+	-  Ading CareNote, CareNoteRequestDTO, CareNoteResponseDTO, CareNoteMapperDTO
+	-  Ading enum BoardingFee
+	-  dding BoardingRecordRepository
+	-  Rename enum PetStatus to BoardingStatus
+	- Change database schema (adding column expected_check_out in table boarding_records)
+	- Formating code
+	- Change NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ...
+- **Ref mục Quyết định thiết kế (nếu có):** 2.1
 
 ---
 
 ## 2. Quyết định thiết kế (các phần đề không đặc tả đầy đủ)
-Không có
+### 2.1 Không có column nào trong database để biết ngày dự kiến check out là ngày nào
+- **Vấn đề:** Không có column nào trong database để biết ngày dự kiến check out là ngày nào => Không có số liệu căn cứ để tính phí thêm do trể là bao nhiêu vì không biết đã trể bao nhiều ngày so với dự tín.
+- **Quyết định của tôi:** thêm column expected_check_out kiểu DATE với constrant NOT NULL trong database để giải quyết vấn đề này
+- **Lý do chọn:** dữ liệu được lưu bền vững trong database và cách thực hiện đơn giãn, tăng khả năng mở rộng cho hệ thống nếu trong tương lai muốn thêm tính năng chỉnh sửa ngày dự kiến check out
+- **Thay đổi schema (nếu có):** expected_check_out
 
 ---
 

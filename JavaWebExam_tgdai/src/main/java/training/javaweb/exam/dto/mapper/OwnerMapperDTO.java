@@ -30,6 +30,10 @@ public class OwnerMapperDTO {
 			ownerResponse.setPets(null);
 		}
 
+		if (owner.getUser() != null) {
+			ownerResponse.setUserResponse(UserMapperDTO.toUserReponse(owner.getUser()));
+		}
+
 		return ownerResponse;
 	}
 
@@ -44,7 +48,7 @@ public class OwnerMapperDTO {
 		owner.setEmail(ownerRequest.getEmail());
 		owner.setAddress(ownerRequest.getAddress());
 		owner.setCreatedAt(ownerRequest.getCreatedAt());
-		if(ownerRequest.getUserRequest() != null) {
+		if (ownerRequest.getUserRequest() != null) {
 			owner.setUser(UserMapperDTO.toUser(ownerRequest.getUserRequest()));
 		}
 
