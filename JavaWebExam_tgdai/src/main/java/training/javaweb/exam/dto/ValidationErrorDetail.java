@@ -5,7 +5,7 @@ import java.util.Map;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ValidationErrorDetail {
-	@Schema(description = "A map matching failed DTO properties to their specific validation messages", example = "{\"name\": \"Owner's name can't not be empty or just a space/tab\", \"phone\": \"Owner's phone can't not be empty or just a space/tab\"}")
+	@Schema(description = "A map matching failed DTO properties to their specific validation messages", example = "{\"name\": \"Owner's name can not be empty or just a space/tab\", \"phone\": \"Owner's phone can not be empty or just a space/tab\"}")
 	private final Map<String, String> messages;
 	@Schema(description = "The specific Java exception class type that triggered this response", example = "MethodArgumentNotValidException")
 	private final String errorType;

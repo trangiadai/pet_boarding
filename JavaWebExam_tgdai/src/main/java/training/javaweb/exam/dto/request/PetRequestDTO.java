@@ -16,12 +16,12 @@ import jakarta.validation.constraints.Size;
 import training.javaweb.exam.enums.PetType;
 
 public class PetRequestDTO {
-	@NotBlank(message = "Pet's name can't not be empty or just a space/tab")
+	@NotBlank(message = "Pet's name can not be empty or just a space/tab")
 	@Size(max = 100, message = "The maximun characters for pet's name is 100")
 	@Schema(description = "The name of the pet", example = "Kiki")
 	private String name;
 
-	@NotNull(message = "Pet's type can't not be empty or invalid value")
+	@NotNull(message = "Pet's type can not be empty or invalid value")
 	@Schema(description = "The type of pet", example = "CAT")
 	private PetType type;
 
@@ -29,13 +29,13 @@ public class PetRequestDTO {
 	@Schema(description = "The breed of pet", example = "Golden Retriever Cat")
 	private String breed;
 
-	@NotNull(message = "Pet's age can't not be empty")
+	@NotNull(message = "Pet's age can not be empty")
 	@PositiveOrZero(message = "Pet's age must be >= 0")
 	@Max(value = 500, message = "the maximun age of pet that the store can accept is 500")
 	@Schema(description = "The age of pet", example = "3")
 	private Integer age;
 
-	@NotNull(message = "Pet's weight can't not be empty or invalid value")
+	@NotNull(message = "Pet's weight can not be empty or invalid value")
 	@DecimalMin(value = "0.01", message = "The minimun weight of pet that the store can accept is 0,01")
 	@DecimalMax(value = "999.99", message = "The maximun weight of pet that the store can accept is 999,99")
 	@Schema(description = "The weight of pet", example = "2.10")
@@ -45,12 +45,12 @@ public class PetRequestDTO {
 	@Schema(description = "The image of pet", example = "https://placedog.net/200/200?id=1")
 	private String imageUrl;
 
-	@NotNull(message = "Owner's id can't not be empty or invalid value")
+	@NotNull(message = "Owner's id can not be empty or invalid value")
 	@Positive(message = "Owner's id must be > 0")
 	@Schema(description = "The id of owner of the pet", example = "1")
 	private Long ownerId;
 
-	@NotNull(message = "Pet's createdAt can't not be empty")
+	@NotNull(message = "Pet's createdAt can not be empty")
 	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
 	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;

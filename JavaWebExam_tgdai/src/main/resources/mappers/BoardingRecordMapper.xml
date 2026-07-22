@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="training.javaweb.exam.dao.mapper.BoardingRecordMapper">
+	<resultMap id="FullBoardingRecordMap"
+		type="training.javaweb.exam.entity.BoardingRecord">
+		<id property="id" column="b_id" />
+		<result property="petId" column="b_pet_id" />
+		<result property="checkInDate" column="b_check_in_date" />
+		<result property="expectedCheckOut" column="b_expected_check_out" />
+		<result property="actualCheckOut" column="b_actual_check_out" />
+		<result property="baseFee" column="b_base_fee" />
+		<result property="lateFee" column="b_late_fee" />
+		<result property="totalFee" column="b_total_fee" />
+		<result property="status" column="b_status" />
+		<result property="notes" column="b_notes" />
+		<result property="createdAt" column="b_created_at" />
+
+		<association property="pet" javaType="training.javaweb.exam.entity.Pet">
+			<id property="id" column="p_id" />
+			<result property="name" column="p_name" />
+			<result property="type" column="p_type" />
+			<result property="breed" column="p_breed" />
+			<result property="age" column="p_age" />
+			<result property="weight" column="p_weight" />
+			<result property="imageUrl" column="p_image_url" />
+			<result property="ownerId" column="p_owner_id" />
+
+			<association property="owner"
+				javaType="training.javaweb.exam.entity.Owner">
+				<id property="id" column="o_id" />
+				<result property="name" column="o_name" />
+				<result property="phone" column="o_phone" />
+				<result property="email" column="o_email" />
+				<result property="address" column="o_address" />
+			</association>
+		</association>
+
+		<collection property="careNotes"
+			ofType="training.javaweb.exam.entity.CareNote">
+			<id property="id" column="cn_id" />
+			<result property="boardingRecordId" column="cn_boarding_record_id" />
+			<result property="note" column="cn_note" />
+			<result property="createdAt" column="cn_created_at" />
+		</collection>
+	</resultMap>
+
+    <sql id="SelectBoardingBase">
+        SELECT 
+            b.id AS b_id, 
+            b.pet_id AS b_pet_id, 
+            b.check_in_date AS b_check_in_date, 
+            b.expected_check_out AS b_expected_check_out, 
+            b.actual_check_out AS b_actual_check_out, 
+            b.base_fee AS b_base_fee, 
+            b.late_fee AS b_late_fee, 
+            b.total_fee AS b_total_fee, 
+            b.status AS b_status, 
+            b.notes AS b_notes, 
+            b.created_at AS b_created_at,
+
+            p.id AS p_id, 
+            p.name AS p_name, 
+            p.type AS p_type, 
+            p.breed AS p_breed, 
+            p.age AS p_age, 
+            p.weight AS p_weight, 
+            p.image_url AS p_image_url, 
+            p.owner_id AS p_owner_id,
+
+            o.id AS o_id, 
+            o.name AS o_name, 
+            o.phone AS o_phone, 
+            o.email AS o_email, 
+            o.address AS o_address,
+
+            cn.id AS cn_id, 
+            cn.boarding_record_id AS cn_boarding_record_id, 
+            cn.note AS cn_note, 
+            cn.created_at AS cn_created_at
+        FROM boarding_records b
+        INNER JOIN pets p ON b.pet_id = p.id
+        INNER JOIN owners o ON p.owner_id = o.id
+        LEFT JOIN care_notes cn ON b.id = cn.boarding_record_id
+    </sql>
+
+    <insert id="createRecord" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO boarding_records (pet_id, check_in_date, expected_check_out, base_fee, late_fee, total_fee, status, notes, created_at)
+        VALUES (
+			#{petId}, 
+			#{checkInDate}, 
+			#{expectedCheckOut}, 
+			#{baseFee}, 
+			#{lateFee}, 
+			#{totalFee}, 
+			#{status}, 
+			#{notes}, 
+			#{createdAt}
+		)
+    </insert>
+
+    <select id="getAllRecords" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        ORDER BY b.id DESC
+    </select>
+
+    <select id="getRecordById" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE b.id = #{id}
+    </select>
+<!--TODO: fix this method in the next day (not complete yet)-->
+<!--    <update id="updateCheckOut" parameterType="map">
+        UPDATE boarding_records
+        SET actual_check_out = #{actualCheckOut},
+            base_fee = #{baseFee},
+            late_fee = #{lateFee},
+            total_fee = #{totalFee},
+            status = 'RETURNED'
+        WHERE id = #{id}
+    </update>-->
+
+    <select id="getActiveBoardingRecords" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE b.status = 'BOARDING'
+        ORDER BY b.id DESC
+    </select>
+
+    <select id="getRecordsByPetId" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE b.pet_id = #{petId}
+        ORDER BY b.id DESC
+    </select>
+
+    <select id="getRecordsByOwnerId" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE o.id = #{ownerId}
+        ORDER BY b.id DESC
+    </select>
+
+    <select id="searchByDateRange" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        <where>
+        	<if test="fromDate != null">
+        		b.check_in_date &gt;= #{fromDate}
+        	</if>
+        	<if test="toDate != null">
+        		AND b.check_in_date &lt;= #{toDate}
+        	</if>
+        </where>
+        ORDER BY b.id DESC
+    </select>
+<!--TODO: this method isn't finish yet (waiting for adding security)-->
+<!--    <select id="getActiveRecordsByOwnerId" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE o.id = #{ownerId} AND b.status = 'BOARDING'
+        ORDER BY b.id DESC
+    </select>-->
+
+    <select id="filterBoardingRecords" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        <where>
+            <if test="status != null and status != ''">
+                LOWER(b.status) = LOWER(#{status})
+            </if>
+            <if test="type != null and type != ''">
+                AND LOWER(p.type) = LOWER(#{type})
+            </if>
+            <if test="ownerId != null">
+                AND o.id = #{ownerId}
+            </if>
+            <if test="fromDate != null">
+                AND b.check_in_date &gt;= #{fromDate}
+            </if>
+            <if test="toDate != null">
+                AND b.check_in_date &lt;= #{toDate}
+            </if>
+        </where>
+        ORDER BY b.id DESC
+    </select>
+
+</mapper>

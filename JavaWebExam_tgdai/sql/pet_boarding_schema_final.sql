@@ -198,6 +198,3 @@ INSERT INTO users (id, username, password, role, owner_id) VALUES
 --              username=0956789012    / password=Test@1234  (Võ Thị Phương)
 -- ================================================================
 
-drop table care_notes;
-Drop table boarding_records;
-

@@ -92,24 +92,39 @@ Branch: `java-web/exam`
 
 ### Day 6 — 21/07/2026
 - **Đã làm:**
-	-  Adding method getPetByNameAndOwnerId to validation condition 1 owner can't have 2 pet with the same name(using in PetService)
-	-  Adding method deleteUserByOwnerId to delete user acccount when delete owner (also implement this in OwnerRepository)
-	-  Adding validation check null before using stream in OwnerMapperDTO
-	-  Adding field userResponse to return user account in OwnerResponseDTO
-	-  dding create user account when create owner
-	-  Adding BoardingRecord,  BoardingRecordRequestDTO, BoardingRecordResponseDTO, BoardingRecordMapperDTO
-	-  Ading CareNote, CareNoteRequestDTO, CareNoteResponseDTO, CareNoteMapperDTO
-	-  Ading enum BoardingFee
-	-  dding BoardingRecordRepository
-	-  Rename enum PetStatus to BoardingStatus
-	- Change database schema (adding column expected_check_out in table boarding_records)
+	- Thêm method getPetByNameAndOwnerId để đám bảo 1 owner không thể gửi 2 pet có cùng tên (dùng trong PetService)
+	- Thêm method deleteUserByOwnerId để xóa user account khi xóa owner
+	- Thêm validation kiểm tra null trước khi dùng Stream API trong OwnerMapperDTO
+	- Thêm field userResponse để trả về thông tin user account trong OwnerResponseDTO
+	- Thêm tính năng tạo tài khoản user khi tạo owner
+	- Thêm BoardingRecord,  BoardingRecordRequestDTO, BoardingRecordResponseDTO, BoardingRecordMapperDTO
+	- Thêm CareNote, CareNoteRequestDTO, CareNoteResponseDTO, CareNoteMapperDTO
+	- Thêm enum BoardingFee
+	- Thêm BoardingRecordRepository
+	- Đổi tên enum PetStatus thành BoardingStatus
+	- Thay đổi database schema (thêm cột expected_check_out trong table boarding_records)
 	- Formating code
-	- Change NOTEs.md
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - a33fe7b543
+- **Ref mục Quyết định thiết kế (nếu có):** 2.1
+
+### Day 7 — 22/07/2026
+- **Đã làm:**
+	- Thêm API tạo boarding record, hiển thị tất cả boarding record, lấy thông tin của boarding record qua id của boarding record, hiển thị thông tin của tất cả 	boarding record đang được gửi, lấy thông tin boarding record thông qua id của pet, lấy thông tin của boarding record thông qua id của owner, tìm kiếm và lấy 	những boarding record thuộc khoảng thời gian (ngày), lọc và lấy nhưng boarding record thông qua trạng thái của record, type của pet, khoảng thời gina (ngày), 	id của owner
+	- Thêm validation cho BoardingRecordRequestDTO và CareNoteRequestDTO
+	- Thêm @Schema cho BoardingRecordReponseDTO và CareNoteResponseDTO
+	- Fix: lỗi chính tả English (sửa "can't not" -> "can not")
+	- Loại bỏ code dư thừa
+	- Formating code
+	- Cập nhật NOTEs.md
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
   - ...
-- **Ref mục Quyết định thiết kế (nếu có):** 2.1
+- **Ref mục Quyết định thiết kế (nếu có):** Không có
 
 ---
 

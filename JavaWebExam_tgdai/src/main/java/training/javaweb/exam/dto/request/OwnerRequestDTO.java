@@ -11,12 +11,12 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class OwnerRequestDTO {
-	@NotBlank(message = "Owner's name can't not be empty or just a space/tab")
+	@NotBlank(message = "Owner's name can not be empty or just a space/tab")
 	@Size(max = 100, message = "The maximun characters for owner's name is 100")
 	@Schema(description = "The name of the owner", example = "Tran Van A")
 	private String name;
 
-	@NotBlank(message = "Owner's phone can't not be empty or just a space/tab")
+	@NotBlank(message = "Owner's phone can not be empty or just a space/tab")
 	@Size(min = 10, max = 20, message = "The minimun number for owner's phone is 10, and the maximun number for owner's phone is 20")
 	@Pattern(regexp = "^[0-9]+$", message = "Phone number must contain only numbers")
 	@Schema(description = "The phone number of the owner", example = "0123456789")
@@ -31,7 +31,7 @@ public class OwnerRequestDTO {
 	@Schema(description = "The address of the owner", example = "123 ABC, Q4, TP.HCM")
 	private String address;
 
-	@NotNull(message = "Owner's createdAt can't not be empty")
+	@NotNull(message = "Owner's createdAt can not be empty")
 	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
 	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
