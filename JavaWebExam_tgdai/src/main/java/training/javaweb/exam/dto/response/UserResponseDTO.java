@@ -5,8 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class UserResponseDTO {
 	@Schema(description = "The username of the user account", example = "0123456789")
 	private String username;
-	@Schema(description = "The password of the user account", example = "letmein")
-	private String password;
 	@Schema(description = "The status of user account", example = "true")
 	private Boolean enable;
 
@@ -18,7 +16,6 @@ public class UserResponseDTO {
 	public UserResponseDTO(String username, String password, Boolean enable) {
 		super();
 		this.username = username;
-		this.password = password;
 		this.enable = enable;
 	}
 
@@ -28,14 +25,6 @@ public class UserResponseDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public Boolean getEnable() {

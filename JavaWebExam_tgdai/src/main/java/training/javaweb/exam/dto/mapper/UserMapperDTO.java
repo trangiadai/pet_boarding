@@ -30,7 +30,6 @@ public class UserMapperDTO {
 		
 		UserResponseDTO userReponse = new UserResponseDTO();
 		userReponse.setUsername(user.getUsername());
-		userReponse.setPassword(user.getPassword());
 		userReponse.setEnable(user.getEnable());
 		
 		return userReponse;

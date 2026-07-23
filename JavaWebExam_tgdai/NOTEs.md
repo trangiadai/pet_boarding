@@ -123,6 +123,17 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
+  - ca4be36485
+- **Ref mục Quyết định thiết kế (nếu có):** Không có
+
+### Day 8 — 23/07/2026
+- **Đã làm:**
+	- Thay đổi số lượng field trong UserReponseDTO
+	- Thêm @JsonIgnore để hiển thị mẫu input phù hợp của boarding request (BoardingRecordRequestDTO)
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
   - ...
 - **Ref mục Quyết định thiết kế (nếu có):** Không có
 

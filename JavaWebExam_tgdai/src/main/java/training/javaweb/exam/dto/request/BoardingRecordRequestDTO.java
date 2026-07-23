@@ -3,9 +3,10 @@ package training.javaweb.exam.dto.request;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -40,6 +41,7 @@ public class BoardingRecordRequestDTO {
 	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 
+	@JsonIgnore
 	@AssertTrue(message = "The expected check out date must be after or equal to the check in day")
 	public boolean isDateRangeValid() {
 		if (checkInDate != null && expectedCheckOut != null) {
