@@ -42,12 +42,13 @@ public class PetRepository {
 		return petMapper.getPetById(param);
 	}
 
-	public Pet getPetByPetNameAndOwnerId(String petName, Long ownerId) {
+	public Pet getPetByPetNameAndOwnerId(String petName, String petType, Long ownerId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("petName", petName);
+		param.put("petType", petType);
 		param.put("ownerId", ownerId);
 
-		return petMapper.getPetByPetNameAndOwnerId(param);
+		return petMapper.getPetByPetNameAndTypeAndOwnerId(param);
 	}
 
 	public void updatePetById(Pet pet) {
@@ -83,6 +84,20 @@ public class PetRepository {
 		param.put("ownerName", name);
 
 		return petMapper.searchPetByOwnerName(param);
+	}
+
+	public Long findOwnerIdByPetId(Long petId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("petId", petId);
+
+		return petMapper.findOwnerIdByPetId(param);
+	}
+
+	public List<Pet> getPetsByOwnerId(Long ownerId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("ownerId", ownerId);
+
+		return petMapper.getPetsByOwnerId(param);
 	}
 
 	public PetRepository(PetMapper petMapper) {

@@ -14,12 +14,21 @@
 	    )
 	</insert>
 
-	<select id="countUserByUsername" parameterType="map" resultType="int">
-	    SELECT COUNT(*) FROM users WHERE username = #{username}
-	</select>
-
 	<delete id="deleteUserByOwnerId" parameterType="map">
 		DELETE FROM users WHERE owner_id = #{ownerId}
 	</delete>
+	
+	<select id="findByUsername" parameterType="map" resultType="training.javaweb.exam.entity.User">
+	    SELECT 
+	        id,
+	        username,
+	        password,
+	        role,
+	        owner_id AS ownerId,
+	        enabled AS enable,
+	        created_at AS createdAt
+	    FROM users
+	    WHERE username = #{username}
+	</select>
 
 </mapper>

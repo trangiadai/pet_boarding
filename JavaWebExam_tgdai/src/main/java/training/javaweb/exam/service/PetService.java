@@ -13,13 +13,15 @@ import training.javaweb.exam.dto.response.PetResponseDTO;
 import training.javaweb.exam.entity.Pet;
 import training.javaweb.exam.enums.PetType;
 import training.javaweb.exam.repository.PetRepository;
+import training.javaweb.exam.security.CustomUserDetails;
 
 @Service
 public class PetService {
 	private PetRepository petRepository;
 
 	public PetResponseDTO createPet(PetRequestDTO petRequest) {
-		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getOwnerId());
+		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getType().name(),
+				petRequest.getOwnerId());
 		if (pet != null) {
 			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
 		}
@@ -44,7 +46,8 @@ public class PetService {
 			throw new RuntimeException("Pet with ID " + id + " not found.");
 		}
 
-		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getOwnerId());
+		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getType().name(),
+				petRequest.getOwnerId());
 		if (pet != null) {
 			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
 		}
@@ -96,6 +99,13 @@ public class PetService {
 	public List<PetResponseDTO> searchPetByOwnerName(String name) {
 
 		return petRepository.searchPetByOwnerName(name).stream().map(pet -> {
+			return PetMapperDTO.toPetResponse(pet);
+		}).collect(Collectors.toList());
+	}
+
+	public List<PetResponseDTO> getMyPets(CustomUserDetails userDetails) {
+		Long ownerId = userDetails.getOwnerId();
+		return petRepository.getPetsByOwnerId(ownerId).stream().map(pet -> {
 			return PetMapperDTO.toPetResponse(pet);
 		}).collect(Collectors.toList());
 	}

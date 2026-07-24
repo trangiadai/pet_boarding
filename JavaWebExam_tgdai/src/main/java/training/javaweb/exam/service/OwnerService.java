@@ -10,9 +10,7 @@ import training.javaweb.exam.dto.mapper.OwnerMapperDTO;
 import training.javaweb.exam.dto.request.OwnerRequestDTO;
 import training.javaweb.exam.dto.request.UserRequestDTO;
 import training.javaweb.exam.dto.response.OwnerResponseDTO;
-import training.javaweb.exam.dto.response.UserResponseDTO;
 import training.javaweb.exam.entity.Owner;
-import training.javaweb.exam.entity.User;
 import training.javaweb.exam.repository.OwnerRepository;
 
 @Service

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="training.javaweb.exam.dao.mapper.BoardingRecordMapper">
-	<resultMap id="FullBoardingRecordMap"
-		type="training.javaweb.exam.entity.BoardingRecord">
+	<resultMap id="FullBoardingRecordMap" type="training.javaweb.exam.entity.BoardingRecord">
 		<id property="id" column="b_id" />
 		<result property="petId" column="b_pet_id" />
 		<result property="checkInDate" column="b_check_in_date" />
 		<result property="expectedCheckOut" column="b_expected_check_out" />
 		<result property="actualCheckOut" column="b_actual_check_out" />
+		<result property="dailyFee" column="b_daily_fee" />
 		<result property="baseFee" column="b_base_fee" />
 		<result property="lateFee" column="b_late_fee" />
+		<result property="discount" column="b_discount" />
 		<result property="totalFee" column="b_total_fee" />
 		<result property="status" column="b_status" />
 		<result property="notes" column="b_notes" />
@@ -46,17 +47,19 @@
 
     <sql id="SelectBoardingBase">
         SELECT 
-            b.id AS b_id, 
-            b.pet_id AS b_pet_id, 
-            b.check_in_date AS b_check_in_date, 
-            b.expected_check_out AS b_expected_check_out, 
-            b.actual_check_out AS b_actual_check_out, 
-            b.base_fee AS b_base_fee, 
-            b.late_fee AS b_late_fee, 
-            b.total_fee AS b_total_fee, 
-            b.status AS b_status, 
-            b.notes AS b_notes, 
-            b.created_at AS b_created_at,
+			b.id AS b_id,
+	        b.pet_id AS b_pet_id,
+	        b.check_in_date AS b_check_in_date,
+	        b.expected_check_out AS b_expected_check_out,
+	        b.actual_check_out AS b_actual_check_out,
+	        b.daily_fee AS b_daily_fee,
+	        b.base_fee AS b_base_fee,
+	        b.late_fee AS b_late_fee,
+	        b.discount AS b_discount,
+	        b.total_fee AS b_total_fee,
+	        b.status AS b_status,
+	        b.notes AS b_notes,
+	        b.created_at AS b_created_at,
 
             p.id AS p_id, 
             p.name AS p_name, 
@@ -78,25 +81,33 @@
             cn.note AS cn_note, 
             cn.created_at AS cn_created_at
         FROM boarding_records b
-        INNER JOIN pets p ON b.pet_id = p.id
-        INNER JOIN owners o ON p.owner_id = o.id
-        LEFT JOIN care_notes cn ON b.id = cn.boarding_record_id
+	    INNER JOIN pets p ON b.pet_id = p.id
+	    INNER JOIN owners o ON p.owner_id = o.id
+	    LEFT JOIN care_notes cn ON b.id = cn.boarding_record_id
     </sql>
 
     <insert id="createRecord" parameterType="map" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO boarding_records (pet_id, check_in_date, expected_check_out, base_fee, late_fee, total_fee, status, notes, created_at)
-        VALUES (
+		INSERT INTO boarding_records (pet_id, check_in_date, expected_check_out,
+			daily_fee,base_fee, late_fee, discount, total_fee, status, notes, created_at) 
+		VALUES (
 			#{petId}, 
 			#{checkInDate}, 
 			#{expectedCheckOut}, 
+			#{dailyFee},
 			#{baseFee}, 
 			#{lateFee}, 
+			#{discount}, 
 			#{totalFee}, 
 			#{status}, 
-			#{notes}, 
+			#{notes},
 			#{createdAt}
 		)
-    </insert>
+	</insert>
+	
+	<select id="getActiveBoardingRecordsByPetId" parameterType="map" resultMap="FullBoardingRecordMap">
+        <include refid="SelectBoardingBase"/>
+        WHERE p.id = #{petId} AND b.status = 'BOARDING'
+    </select>
 
     <select id="getAllRecords" resultMap="FullBoardingRecordMap">
         <include refid="SelectBoardingBase"/>
@@ -107,16 +118,18 @@
         <include refid="SelectBoardingBase"/>
         WHERE b.id = #{id}
     </select>
-<!--TODO: fix this method in the next day (not complete yet)-->
-<!--    <update id="updateCheckOut" parameterType="map">
+
+    <update id="checkOut" parameterType="map">
         UPDATE boarding_records
-        SET actual_check_out = #{actualCheckOut},
-            base_fee = #{baseFee},
-            late_fee = #{lateFee},
-            total_fee = #{totalFee},
-            status = 'RETURNED'
-        WHERE id = #{id}
-    </update>-->
+        SET 
+        	actual_check_out = #{actualCheckOut},
+	        base_fee = #{baseFee},
+	        late_fee = #{lateFee},
+	        discount = #{discount},
+	        total_fee = #{totalFee},
+	        status = #{recordStatus}
+    	WHERE id = #{id}
+    </update>
 
     <select id="getActiveBoardingRecords" resultMap="FullBoardingRecordMap">
         <include refid="SelectBoardingBase"/>
@@ -148,12 +161,12 @@
         </where>
         ORDER BY b.id DESC
     </select>
-<!--TODO: this method isn't finish yet (waiting for adding security)-->
-<!--    <select id="getActiveRecordsByOwnerId" parameterType="map" resultMap="FullBoardingRecordMap">
+
+    <select id="getMyActiveBoardingRecords" parameterType="map" resultMap="FullBoardingRecordMap">
         <include refid="SelectBoardingBase"/>
         WHERE o.id = #{ownerId} AND b.status = 'BOARDING'
         ORDER BY b.id DESC
-    </select>-->
+    </select>
 
     <select id="filterBoardingRecords" parameterType="map" resultMap="FullBoardingRecordMap">
         <include refid="SelectBoardingBase"/>
@@ -176,5 +189,12 @@
         </where>
         ORDER BY b.id DESC
     </select>
+    
+    <select id="findOwnerIdByBoardingRecordId" parameterType="map" resultType="java.lang.Long">
+	    SELECT p.owner_id
+	    FROM boarding_records br
+	    JOIN pets p ON br.pet_id = p.id
+	    WHERE br.id = #{recordId}
+	</select>
 
 </mapper>

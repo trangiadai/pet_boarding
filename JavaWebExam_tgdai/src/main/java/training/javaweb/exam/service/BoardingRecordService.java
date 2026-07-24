@@ -10,16 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import training.javaweb.exam.dto.mapper.BoardingRecordMapperDTO;
 import training.javaweb.exam.dto.request.BoardingRecordRequestDTO;
+import training.javaweb.exam.dto.request.CheckOutRequestDTO;
 import training.javaweb.exam.dto.request.FilterRequestParam;
 import training.javaweb.exam.dto.request.SearchRequestParam;
 import training.javaweb.exam.dto.response.BoardingRecordResponseDTO;
+import training.javaweb.exam.dto.response.FeeResult;
 import training.javaweb.exam.dto.response.MyActiveBoardingResponseDTO;
+//import training.javaweb.exam.dto.response.MyActiveBoardingResponseDTO;
 import training.javaweb.exam.entity.BoardingRecord;
 import training.javaweb.exam.entity.Pet;
-import training.javaweb.exam.enums.BoardingFee;
 import training.javaweb.exam.enums.BoardingStatus;
 import training.javaweb.exam.repository.BoardingRecordRepository;
 import training.javaweb.exam.repository.PetRepository;
+import training.javaweb.exam.security.CustomUserDetails;
+import training.javaweb.exam.utils.FeeCalculator;
 
 @Service
 public class BoardingRecordService {
@@ -28,27 +32,29 @@ public class BoardingRecordService {
 	private final PetRepository petRepository;
 
 	@Transactional
-	public BoardingRecordResponseDTO createRecord(BoardingRecordRequestDTO boardingRecordRequest, Long dailyFee) {
-		Pet pet = petRepository.getPetById(boardingRecordRequest.getPetId());
+	public BoardingRecordResponseDTO createRecord(BoardingRecordRequestDTO request) {
+		Pet pet = petRepository.getPetById(request.getPetId());
 		if (pet == null) {
-			throw new IllegalArgumentException("Pet not found with ID: " + boardingRecordRequest.getPetId());
+			throw new IllegalArgumentException("Pet not found with ID: " + request.getPetId());
+		}
+		if (boardingRecordRepository.getActiveBoardingRecordsByPetId(request.getPetId()) != null) {
+			throw new IllegalArgumentException(
+					"This pet is already BOARDING, can't not create another boarding record");
 		}
 
-		long expectedDays = ChronoUnit.DAYS.between(boardingRecordRequest.getCheckInDate(),
-				boardingRecordRequest.getExpectedCheckOut());
-		if (expectedDays <= 0) {
+		BoardingRecord record = BoardingRecordMapperDTO.toBoardingRecord(request);
+
+		long expectedDays = ChronoUnit.DAYS.between(request.getCheckInDate(), request.getExpectedCheckOut());
+		if (expectedDays <= 0)
 			expectedDays = 1;
-		}
 
-		long baseFee = expectedDays * dailyFee;
-		long totalFee = applyDiscount(baseFee, expectedDays);
+		long initialBaseFee = expectedDays * request.getDailyFee();
+		record.setBaseFee(initialBaseFee);
+		record.setLateFee(0L);
+		record.setDiscount(0L);
+		record.setTotalFee(initialBaseFee);
 
-		BoardingRecord boardingRecord = BoardingRecordMapperDTO.toBoardingRecord(boardingRecordRequest);
-		boardingRecord.setBaseFee(baseFee);
-		boardingRecord.setLateFee(0L);
-		boardingRecord.setTotalFee(totalFee);
-
-		Long newId = boardingRecordRepository.createRecord(boardingRecord, dailyFee);
+		Long newId = boardingRecordRepository.createRecord(record);
 		return getRecordById(newId);
 	}
 
@@ -58,7 +64,6 @@ public class BoardingRecordService {
 		}).collect(Collectors.toList());
 	}
 
-	// C3. Record Details
 	public BoardingRecordResponseDTO getRecordById(Long id) {
 		BoardingRecord boardingRecord = boardingRecordRepository.getRecordById(id);
 		if (boardingRecord == null) {
@@ -67,44 +72,26 @@ public class BoardingRecordService {
 		return BoardingRecordMapperDTO.toBoardingRecordResponse(boardingRecord);
 	}
 
-//	TODO: fix this method in the next day (not complete yet)
-//	@Transactional
-//	public BoardingRecordResponseDTO checkOut(Long boardingRecordId, LocalDate actualCheckOut, Long dailyFee) {
-//		BoardingRecord boardingRecord = boardingRecordRepository.getRecordById(boardingRecordId);
-//		if (boardingRecord == null)
-//			throw new IllegalArgumentException("Record not found.");
-//		if (BoardingStatus.RETURNED.name().equalsIgnoreCase(boardingRecord.getStatus())) {
-//			throw new IllegalStateException("Pet has already been returned.");
-//		}
-//
-//		LocalDate checkIn = boardingRecord.getCheckInDate();
-//		LocalDate expectedOut = boardingRecord.getExpectedCheckOut();
-//
-//		long expectedDays = ChronoUnit.DAYS.between(checkIn, expectedOut);
-//		if (expectedDays <= 0)
-//			expectedDays = 1;
-//
-//		long actualDays = ChronoUnit.DAYS.between(checkIn, actualCheckOut);
-//		if (actualDays <= 0)
-//			actualDays = 1;
-//
-//		long baseFee;
-//		long lateFee = 0;
-//
-//		if (actualCheckOut.isAfter(expectedOut)) {
-//			baseFee = actualDays * dailyFee;
-//			long lateDays = ChronoUnit.DAYS.between(expectedOut, actualCheckOut);
-//			lateFee = Math.round(lateDays * dailyFee * BoardingFee.OVERDUE_CHARGE_PERCENTAGE.getValue());
-//		} else {
-//			baseFee = expectedDays * dailyFee;
-//		}
-//
-//		long totalBeforeDiscount = baseFee + lateFee;
-//		long finalTotalFee = applyDiscount(totalBeforeDiscount, actualDays);
-//
-//		boardingRecordRepository.updateCheckOut(boardingRecordId, actualCheckOut, baseFee, lateFee, finalTotalFee);
-//		return getRecordById(boardingRecordId);
-//	}
+	@Transactional
+	public BoardingRecordResponseDTO checkOut(CheckOutRequestDTO request) {
+		BoardingRecord record = boardingRecordRepository.getRecordById(request.getBoardingRecordId());
+		if (record == null) {
+			throw new IllegalArgumentException("Record not found.");
+		}
+		if (BoardingStatus.RETURNED.name().equalsIgnoreCase(record.getStatus())) {
+			throw new IllegalStateException("Pet has already been returned.");
+		}
+
+		long dailyFee = (request.getDailyFee() != null) ? request.getDailyFee() : record.getDailyFee();
+
+		FeeResult result = FeeCalculator.calculateCheckOutFee(record.getCheckInDate(), record.getExpectedCheckOut(),
+				request.getActualCheckOut(), dailyFee);
+
+		boardingRecordRepository.checkOut(request.getBoardingRecordId(), request.getActualCheckOut(), result.baseFee,
+				result.lateFee, result.discountAmount, result.totalFee, BoardingStatus.RETURNED.name());
+
+		return getRecordById(request.getBoardingRecordId());
+	}
 
 	public List<BoardingRecordResponseDTO> getActiveBoardingRecords() {
 		return boardingRecordRepository.getActiveBoardingRecords().stream().map(record -> {
@@ -124,54 +111,52 @@ public class BoardingRecordService {
 		}).collect(Collectors.toList());
 	}
 
+	public List<BoardingRecordResponseDTO> getRecordsByOwnerId(CustomUserDetails userDetails) {
+		Long ownerId = userDetails.getOwnerId();
+
+		return boardingRecordRepository.getRecordsByOwnerId(ownerId).stream().map(record -> {
+			return BoardingRecordMapperDTO.toBoardingRecordResponse(record);
+		}).collect(Collectors.toList());
+	}
+
 	public List<BoardingRecordResponseDTO> searchByDateRange(SearchRequestParam searchRequestParam) {
 		return boardingRecordRepository.searchByDateRange(searchRequestParam).stream().map(record -> {
 			return BoardingRecordMapperDTO.toBoardingRecordResponse(record);
 		}).collect(Collectors.toList());
 	}
 
-//	// TODO: by phone and check user name password again to know are they have permision to get that value
-//	// C9 & Requirement 1: My Active Boarding
-//	public List<MyActiveBoardingResponseDTO> getMyActiveBoarding(Long ownerId, Long dailyFee) {
-//		List<BoardingRecord> activeRecords = boardingRecordRepository.getActiveRecordsByOwnerId(ownerId);
-//		LocalDate today = LocalDate.now();
-//
-//		return activeRecords.stream().map(record -> {
-//			MyActiveBoardingResponseDTO dto = new MyActiveBoardingResponseDTO();
-//			dto.setRecord(BoardingRecordMapperDTO.toBoardingRecordResponse(record));
-//
-//			// Requirement 1.2: Days boarded so far
-//			long daysSoFar = ChronoUnit.DAYS.between(record.getCheckInDate(), today);
-//			if (daysSoFar <= 0)
-//				daysSoFar = 1;
-//
-//			// Requirement 1.3: Days remaining until expected return
-//			long daysRemaining = ChronoUnit.DAYS.between(today, record.getExpectedCheckOut());
-//
-//			// Requirement 1.1: Temporary estimated fee up to today
-//			long estBaseFee;
-//			long estLateFee = 0;
-//
-//			if (today.isAfter(record.getExpectedCheckOut())) {
-//				estBaseFee = daysSoFar * dailyFee;
-//				long lateDays = ChronoUnit.DAYS.between(record.getExpectedCheckOut(), today);
-//				estLateFee = Math.round(lateDays * dailyFee * BoardingFee.OVERDUE_CHARGE_PERCENTAGE.getValue());
-//			} else {
-//				long expectedDays = ChronoUnit.DAYS.between(record.getCheckInDate(), record.getExpectedCheckOut());
-//				if (expectedDays <= 0)
-//					expectedDays = 1;
-//				estBaseFee = expectedDays * dailyFee;
-//			}
-//
-//			long estTotal = applyDiscount(estBaseFee + estLateFee, daysSoFar);
-//
-//			dto.setDaysBoardedSoFar(daysSoFar);
-//			dto.setDaysRemaining(daysRemaining);
-//			dto.setEstimatedFee(estTotal);
-//
-//			return dto;
-//		}).collect(Collectors.toList());
-//	}
+	public List<MyActiveBoardingResponseDTO> getMyActiveBoardingRecords(CustomUserDetails userDetails) {
+		Long ownerId = userDetails.getOwnerId();
+		List<BoardingRecord> records = boardingRecordRepository.getMyActiveBoardingRecords(ownerId);
+		LocalDate today = LocalDate.now();
+
+		return records.stream().map(record -> {
+			BoardingRecordResponseDTO recordDTO = BoardingRecordMapperDTO.toBoardingRecordResponse(record);
+
+			LocalDate checkIn = record.getCheckInDate();
+			LocalDate expectedOut = record.getExpectedCheckOut();
+
+			long daysBoardedSoFar = ChronoUnit.DAYS.between(checkIn, today);
+			if (daysBoardedSoFar < 0)
+				daysBoardedSoFar = 0;
+
+			long daysRemaining = ChronoUnit.DAYS.between(today, expectedOut);
+			if (daysRemaining < 0) {
+				daysRemaining = 0;
+			}
+
+			long dailyFee = (record.getDailyFee() != null) ? record.getDailyFee() : 0L;
+			FeeResult estimatedResult = FeeCalculator.calculateOngoingFee(checkIn, expectedOut, today, dailyFee);
+
+			MyActiveBoardingResponseDTO dto = new MyActiveBoardingResponseDTO();
+			dto.setRecord(recordDTO);
+			dto.setDaysBoardedSoFar(daysBoardedSoFar);
+			dto.setDaysRemaining(daysRemaining);
+			dto.setEstimatedFee(estimatedResult.totalFee);
+
+			return dto;
+		}).collect(Collectors.toList());
+	}
 
 	public List<BoardingRecordResponseDTO> filterBoardingRecords(FilterRequestParam filterRequestParam) {
 		String boardingRecordStatus = null;
@@ -188,16 +173,6 @@ public class BoardingRecordService {
 				.stream().map(record -> {
 					return BoardingRecordMapperDTO.toBoardingRecordResponse(record);
 				}).collect(Collectors.toList());
-	}
-
-	private long applyDiscount(long fee, long durationDays) {
-		double discount = 0.0;
-		if (durationDays >= 14) {
-			discount = 0.10;
-		} else if (durationDays >= 7) {
-			discount = 0.05;
-		}
-		return fee - (long) (fee * discount);
 	}
 
 	public BoardingRecordService(BoardingRecordRepository boardingRecordRepository, PetRepository petRepository) {

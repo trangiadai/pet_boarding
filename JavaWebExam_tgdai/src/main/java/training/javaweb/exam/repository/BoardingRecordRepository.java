@@ -1,35 +1,43 @@
 package training.javaweb.exam.repository;
 
-import org.springframework.stereotype.Repository;
-import training.javaweb.exam.dao.mapper.BoardingRecordMapper;
-import training.javaweb.exam.dto.request.FilterRequestParam;
-import training.javaweb.exam.dto.request.SearchRequestParam;
-import training.javaweb.exam.entity.BoardingRecord;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
+import training.javaweb.exam.dao.mapper.BoardingRecordMapper;
+import training.javaweb.exam.dto.request.SearchRequestParam;
+import training.javaweb.exam.entity.BoardingRecord;
+
 @Repository
 public class BoardingRecordRepository {
-
 	private final BoardingRecordMapper boardingRecordMapper;
 
-	public Long createRecord(BoardingRecord boardingRecord, Long dailyFee) {
+	public Long createRecord(BoardingRecord boardingRecord) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("petId", boardingRecord.getPetId());
 		param.put("checkInDate", boardingRecord.getCheckInDate());
 		param.put("expectedCheckOut", boardingRecord.getExpectedCheckOut());
+		param.put("dailyFee", boardingRecord.getDailyFee());
 		param.put("baseFee", boardingRecord.getBaseFee());
 		param.put("lateFee", boardingRecord.getLateFee());
+		param.put("discount", boardingRecord.getDiscount());
 		param.put("totalFee", boardingRecord.getTotalFee());
 		param.put("status", boardingRecord.getStatus());
 		param.put("notes", boardingRecord.getNotes());
 		param.put("createdAt", boardingRecord.getCreatedAt());
-		boardingRecordMapper.createRecord(param);
 
+		boardingRecordMapper.createRecord(param);
 		return ((Number) param.get("id")).longValue();
+	}
+
+	public BoardingRecord getActiveBoardingRecordsByPetId(Long petId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("petId", petId);
+
+		return boardingRecordMapper.getActiveBoardingRecordsByPetId(param);
 	}
 
 	public List<BoardingRecord> getAllRecords() {
@@ -43,16 +51,18 @@ public class BoardingRecordRepository {
 		return boardingRecordMapper.getRecordById(param);
 	}
 
-//	TODO: fix this method in the next day (not complete yet)
-//	public void updateCheckOut(Long id, LocalDate actualCheckOut, Long baseFee, Long lateFee, Long totalFee) {
-//		Map<String, Object> param = new HashMap<>();
-//		param.put("id", id);
-//		param.put("actualCheckOut", actualCheckOut);
-//		param.put("baseFee", baseFee);
-//		param.put("lateFee", lateFee);
-//		param.put("totalFee", totalFee);
-//		boardingRecordMapper.updateCheckOut(param);
-//	}
+	public void checkOut(Long id, LocalDate actualCheckOut, Long baseFee, Long lateFee, Long discount, Long totalFee,
+			String recordStatus) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		param.put("actualCheckOut", actualCheckOut);
+		param.put("baseFee", baseFee);
+		param.put("lateFee", lateFee);
+		param.put("discount", discount);
+		param.put("totalFee", totalFee);
+		param.put("recordStatus", recordStatus);
+		boardingRecordMapper.checkOut(param);
+	}
 
 	public List<BoardingRecord> getActiveBoardingRecords() {
 		return boardingRecordMapper.getActiveBoardingRecords();
@@ -80,13 +90,12 @@ public class BoardingRecordRepository {
 		return boardingRecordMapper.searchByDateRange(param);
 	}
 
-//	TODO: this method isn't finish yet (waiting for adding security)
-//	public List<BoardingRecord> getActiveRecordsByOwnerId(Long ownerId) {
-//		Map<String, Object> param = new HashMap<>();
-//		param.put("ownerId", ownerId);
-//		
-//		return boardingRecordMapper.getActiveRecordsByOwnerId(param);
-//	}
+	public List<BoardingRecord> getMyActiveBoardingRecords(Long ownerId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("ownerId", ownerId);
+
+		return boardingRecordMapper.getMyActiveBoardingRecords(param);
+	}
 
 	public List<BoardingRecord> filterBoardingRecords(String boardingRecordstatus, String petType, Long ownerId,
 			LocalDate fromDate, LocalDate toDate) {
@@ -98,6 +107,13 @@ public class BoardingRecordRepository {
 		param.put("toDate", toDate);
 
 		return boardingRecordMapper.filterBoardingRecords(param);
+	}
+
+	public Long findOwnerIdByBoardingRecordId(Long boardingRecordId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("recordId", boardingRecordId);
+
+		return boardingRecordMapper.findOwnerIdByBoardingRecordId(param);
 	}
 
 	public BoardingRecordRepository(BoardingRecordMapper boardingRecordMapper) {

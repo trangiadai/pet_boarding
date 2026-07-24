@@ -36,8 +36,8 @@ public class FilterRequestParam {
 		return true;
 	}
 
-	public FilterRequestParam(BoardingStatus boardingRecordStatus, PetType petType,
-			@Positive(message = "Owner's id must be > 0") Long ownerId, LocalDate fromDate, LocalDate toDate) {
+	public FilterRequestParam(BoardingStatus boardingRecordStatus, PetType petType, Long ownerId, LocalDate fromDate,
+			LocalDate toDate) {
 		super();
 		this.boardingRecordStatus = boardingRecordStatus;
 		this.petType = petType;

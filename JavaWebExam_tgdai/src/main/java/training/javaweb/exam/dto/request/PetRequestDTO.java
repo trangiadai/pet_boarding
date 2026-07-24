@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -51,7 +51,7 @@ public class PetRequestDTO {
 	private Long ownerId;
 
 	@NotNull(message = "Pet's createdAt can not be empty")
-	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
+	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
 	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 

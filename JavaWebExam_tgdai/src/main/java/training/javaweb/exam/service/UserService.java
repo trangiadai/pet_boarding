@@ -27,11 +27,10 @@ public class UserService {
 		}
 
 		String username = owner.getPhone();
-		if (userRepository.userExists(username)) {
+		if (userRepository.findByUsername(username) != null) {
 			throw new RuntimeException("Account with this phone number already exists.");
 		}
 
-		
 		User user = UserMapperDTO.toUser(userRequest);
 		user.setUsername(username);
 		user.setPassword(passwordEncoder.encode(password));

@@ -18,10 +18,14 @@ public class BoardingRecordResponseDTO {
 	private LocalDate expectedCheckOut;
 	@Schema(description = "The actual check out day", example = "2026-08-23")
 	private LocalDate actualCheckOut;
+	@Schema(description = "The daily fee per day", example = "100000")
+	private Long dailyFee;
 	@Schema(description = "The base fee of this boarding record", example = "100000")
 	private Long baseFee;
 	@Schema(description = "The late fee of this boarding record", example = "20000")
 	private Long lateFee;
+	@Schema(description = "The applied discount amount", example = "10000")
+	private Long discount;
 	@Schema(description = "The total fee of this boarding record", example = "120000")
 	private Long totalFee;
 	@Schema(description = "The type of boarding status", example = "BOARDING")
@@ -36,16 +40,19 @@ public class BoardingRecordResponseDTO {
 	private List<CareNoteResponseDTO> careNoteResponses;
 
 	public BoardingRecordResponseDTO(Long id, Long petId, LocalDate checkInDate, LocalDate expectedCheckOut,
-			LocalDate actualCheckOut, Long baseFee, Long lateFee, Long totalFee, BoardingStatus status, String notes,
-			LocalDateTime createdAt, PetResponseDTO petResponse, List<CareNoteResponseDTO> careNoteResponses) {
+			LocalDate actualCheckOut, Long dailyFee, Long baseFee, Long lateFee, Long discount, Long totalFee,
+			BoardingStatus status, String notes, LocalDateTime createdAt, PetResponseDTO petResponse,
+			List<CareNoteResponseDTO> careNoteResponses) {
 		super();
 		this.id = id;
 		this.petId = petId;
 		this.checkInDate = checkInDate;
 		this.expectedCheckOut = expectedCheckOut;
 		this.actualCheckOut = actualCheckOut;
+		this.dailyFee = dailyFee;
 		this.baseFee = baseFee;
 		this.lateFee = lateFee;
+		this.dailyFee = dailyFee;
 		this.totalFee = totalFee;
 		this.status = status;
 		this.notes = notes;
@@ -99,6 +106,14 @@ public class BoardingRecordResponseDTO {
 		this.actualCheckOut = actualCheckOut;
 	}
 
+	public Long getDailyFee() {
+		return dailyFee;
+	}
+
+	public void setDailyFee(Long dailyFee) {
+		this.dailyFee = dailyFee;
+	}
+
 	public Long getBaseFee() {
 		return baseFee;
 	}
@@ -113,6 +128,14 @@ public class BoardingRecordResponseDTO {
 
 	public void setLateFee(Long lateFee) {
 		this.lateFee = lateFee;
+	}
+
+	public Long getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Long discount) {
+		this.discount = discount;
 	}
 
 	public Long getTotalFee() {

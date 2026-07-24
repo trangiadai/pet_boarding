@@ -10,11 +10,13 @@ import java.util.Map;
 public interface BoardingRecordMapper {
 	void createRecord(Map<String, Object> param);
 
+	BoardingRecord getActiveBoardingRecordsByPetId(Map<String, Object> param);
+
 	List<BoardingRecord> getAllRecords();
 
 	BoardingRecord getRecordById(Map<String, Object> param);
 
-//	void updateCheckOut(Map<String, Object> param);
+	void checkOut(Map<String, Object> param);
 
 	List<BoardingRecord> getActiveBoardingRecords();
 
@@ -23,8 +25,10 @@ public interface BoardingRecordMapper {
 	List<BoardingRecord> getRecordsByOwnerId(Map<String, Object> param);
 
 	List<BoardingRecord> searchByDateRange(Map<String, Object> param);
-//	TODO: this method isn't finish yet (waiting for adding security)
-//	List<BoardingRecord> getActiveRecordsByOwnerId(Map<String, Object> param);
+
+	List<BoardingRecord> getMyActiveBoardingRecords(Map<String, Object> param);
 
 	List<BoardingRecord> filterBoardingRecords(Map<String, Object> param);
+
+	Long findOwnerIdByBoardingRecordId(Map<String, Object> param);
 }

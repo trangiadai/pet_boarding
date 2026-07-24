@@ -10,8 +10,10 @@ public class BoardingRecord {
 	private LocalDate checkInDate;
 	private LocalDate expectedCheckOut;
 	private LocalDate actualCheckOut;
+	private Long dailyFee;
 	private Long baseFee;
 	private Long lateFee;
+	private Long discount;
 	private Long totalFee;
 	private String status;
 	private String notes;
@@ -20,16 +22,18 @@ public class BoardingRecord {
 	private List<CareNote> careNotes;
 
 	public BoardingRecord(Long id, Long petId, LocalDate checkInDate, LocalDate expectedCheckOut,
-			LocalDate actualCheckOut, Long baseFee, Long lateFee, Long totalFee, String status, String notes,
-			LocalDateTime createdAt, Pet pet, List<CareNote> careNotes) {
+			LocalDate actualCheckOut, Long dailyFee, Long baseFee, Long lateFee, Long discount, Long totalFee,
+			String status, String notes, LocalDateTime createdAt, Pet pet, List<CareNote> careNotes) {
 		super();
 		this.id = id;
 		this.petId = petId;
 		this.checkInDate = checkInDate;
 		this.expectedCheckOut = expectedCheckOut;
 		this.actualCheckOut = actualCheckOut;
+		this.dailyFee = dailyFee;
 		this.baseFee = baseFee;
 		this.lateFee = lateFee;
+		this.discount = discount;
 		this.totalFee = totalFee;
 		this.status = status;
 		this.notes = notes;
@@ -83,6 +87,14 @@ public class BoardingRecord {
 		this.actualCheckOut = actualCheckOut;
 	}
 
+	public Long getDailyFee() {
+		return dailyFee;
+	}
+
+	public void setDailyFee(Long dailyFee) {
+		this.dailyFee = dailyFee;
+	}
+
 	public Long getBaseFee() {
 		return baseFee;
 	}
@@ -97,6 +109,14 @@ public class BoardingRecord {
 
 	public void setLateFee(Long lateFee) {
 		this.lateFee = lateFee;
+	}
+
+	public Long getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Long discount) {
+		this.discount = discount;
 	}
 
 	public Long getTotalFee() {

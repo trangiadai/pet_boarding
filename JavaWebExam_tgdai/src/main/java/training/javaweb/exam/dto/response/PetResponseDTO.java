@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import training.javaweb.exam.enums.BoardingStatus;
 import training.javaweb.exam.enums.PetType;
 
 public class PetResponseDTO {
@@ -27,6 +28,8 @@ public class PetResponseDTO {
 	private LocalDateTime createdAt;
 	@Schema(description = "The owner information of the pet")
 	private OwnerResponseDTO owner;
+	@Schema(description = "Current boarding status of the pet", example = "BOARDING")
+	private BoardingStatus status;
 
 	public PetResponseDTO() {
 		super();
@@ -34,7 +37,7 @@ public class PetResponseDTO {
 	}
 
 	public PetResponseDTO(Long id, String name, PetType type, String breed, Integer age, BigDecimal weight,
-			String imageUrl, Long ownerId, LocalDateTime createdAt, OwnerResponseDTO owner) {
+			String imageUrl, Long ownerId, LocalDateTime createdAt, OwnerResponseDTO owner, BoardingStatus status) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -46,6 +49,7 @@ public class PetResponseDTO {
 		this.ownerId = ownerId;
 		this.createdAt = createdAt;
 		this.owner = owner;
+		this.status = status;
 	}
 
 	public Long getId() {
@@ -126,6 +130,14 @@ public class PetResponseDTO {
 
 	public void setOwner(OwnerResponseDTO owner) {
 		this.owner = owner;
+	}
+
+	public BoardingStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(BoardingStatus status) {
+		this.status = status;
 	}
 
 }

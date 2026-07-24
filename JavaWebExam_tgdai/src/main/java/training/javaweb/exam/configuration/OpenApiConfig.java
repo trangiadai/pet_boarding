@@ -19,7 +19,7 @@ public class OpenApiConfig {
 				.info(new Info().title("Pet_Boarding_Store API").version("1.0")
 						.description("Backend REST APIs for Pet Boarding Store System"))
 				.addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-				.components(new Components().addSecuritySchemes(securitySchemeName, new SecurityScheme()
-						.name(securitySchemeName).type(SecurityScheme.Type.HTTP).scheme("basic")));
+				.components(new Components().addSecuritySchemes(securitySchemeName,
+						new SecurityScheme().name(securitySchemeName).type(SecurityScheme.Type.HTTP).scheme("basic")));
 	}
 }

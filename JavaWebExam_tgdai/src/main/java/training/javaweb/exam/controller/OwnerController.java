@@ -3,6 +3,7 @@ package training.javaweb.exam.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,18 +27,19 @@ import training.javaweb.exam.service.OwnerService;
 
 @RestController
 @RequestMapping("/owners")
+@PreAuthorize("hasRole('ADMIN')")
 public class OwnerController {
 	private final OwnerService ownerService;
 
 	@GetMapping
-	@Operation(summary = "A2. Hiển thị danh sách")
+	@Operation(summary = "A2. Hiển thị danh sách [ADMIN]")
 	@ApiResponse(responseCode = "200", description = "Successfully get all information of owners")
 	public List<OwnerResponseDTO> getAllOwners() {
 		return ownerService.getAllOwners();
 	}
 
 	@GetMapping("/{id}")
-	@Operation(summary = "A3. Xem chi tiết (kèm danh sách thú cưng)")
+	@Operation(summary = "A3. Xem chi tiết (kèm danh sách thú cưng) [ADMIN]")
 	@ApiResponse(responseCode = "200", description = "Get owner's detail completed.")
 	public OwnerResponseDTO getOwnerById(@PathVariable Long id) {
 		return ownerService.getOwnerById(id);
@@ -45,7 +47,7 @@ public class OwnerController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@Operation(summary = "A1. Thêm chủ nuôi mới")
+	@Operation(summary = "A1. Thêm chủ nuôi mới [ADMIN]")
 	@ApiResponse(responseCode = "201", description = "Successfully create new customer.")
 	@ApiResponse(responseCode = "400", description = "Payload schema field rule constraint violation caught.", content = @Content(schema = @Schema(implementation = ValidationErrorDetail.class)))
 	public OwnerResponseDTO createOwner(@Valid @RequestBody OwnerRequestDTO ownerRequest) {
@@ -53,21 +55,22 @@ public class OwnerController {
 	}
 
 	@PutMapping("/{id}")
-	@Operation(summary = "A4. Cập nhật thông tin chủ nuôi")
+	@Operation(summary = "A4. Cập nhật thông tin chủ nuôi [ADMIN]")
 	@ApiResponse(responseCode = "200", description = "Owner information updated successfully.")
+	@ApiResponse(responseCode = "400", description = "Payload schema field rule constraint violation caught.", content = @Content(schema = @Schema(implementation = ValidationErrorDetail.class)))
 	public OwnerResponseDTO updateOwner(@PathVariable Long id, @Valid @RequestBody OwnerRequestDTO ownerRequest) {
 		return ownerService.updateOwner(id, ownerRequest);
 	}
 
 	@GetMapping("/search")
-	@Operation(summary = "A5. Tìm kiếm theo tên hoặc số điện thoại")
+	@Operation(summary = "A5. Tìm kiếm theo tên hoặc số điện thoại [ADMIN]")
 	@ApiResponse(responseCode = "200", description = "Search query completed.")
 	public List<OwnerResponseDTO> searchOwners(@RequestParam String keyword) {
 		return ownerService.searchOwners(keyword);
 	}
 
 	@DeleteMapping("/{id}")
-	@Operation(summary = "A7. Xóa thông tin chủ nuôi")
+	@Operation(summary = "A7. Xóa thông tin chủ nuôi [ADMIN]")
 	@ApiResponse(responseCode = "204", description = "Owner details and their pets purged successfully.")
 	public int deleteOwnerById(@PathVariable Long id) {
 		return ownerService.deleteOwnerById(id);

@@ -134,8 +134,38 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ...
+  - d3287ec5c9
 - **Ref mục Quyết định thiết kế (nếu có):** Không có
+
+### Day 9 — 24/07/2026
+- **Đã làm:**
+	- Thêm API để nhóm và lấy doanh thu theo quý, năm
+	- Thêm API để nhận thông kê và báo cáo về tổng quan thông tin của hệ thống
+	- Thêm logic xử lý để đảm bảo 1 owner không được có 2 thú cưng cùng tên và cùng loại (requirement tuần 2, số 5)
+	- Thêm DTO MyActiveBoardingResponseDTO để trả về chi phí tạm tín, số ngày đã gửi tính đến hiện tại, số ngày còn lại tín đến ngày dự kiến trả (dùng trong API 	user dùng để lấy thông tin phiếu gửi đang gửi của họ)
+	- Điều chỉnh logic khi tạo phiếu gửi để đảm bảo nếu 1 pet đang được gửi và chưa được thanh toán thì không thể tiếp tục tạo phiếu gửi khác có trạng thái 	BOARDING cho pet đó nữa
+	- Thay đổi BoardingRecord entity và BoardingRecordResponseDTO để lưu phí gửi hằng ngày (daily fee) và giảm giá nếu có (discount)
+	- Đổi validation annotation của field createdAt cho tất cả request DTO trên hệ thống
+	- Thay đổi BoardingRecordResquestDTO để đảm bảo admin phải cung cấp phí gửi hằng ngà khi tạo phiếu gửi
+	- Thay đổi PetReponseDTO và Pet entity để trả về trạng thái của pet (status) (requirement B8)
+	- Thêm API để user lấy tất cả thông tin về những pet của họ đã được lưu trên hệ thống 
+	- Thêm API để tạo ghi chú và lấy tất cả ghi chi của 1 phiếu gửi
+	- Thêm API để user lấy tất cả thông tin về phiếu gửi của họ (bao gồm tất cả phiếu đã và chưa thanh toán) 
+	- Thêm API để user lấy tất cả thông tin về phiếu gửi chưa thanh toán của họ
+	- Thêm API để check out (trả thú cưng)
+	- Thêm mô tả cho tất cả API (bằng OpenAPI annotation)
+	- Thay đổi cấu hình bảo mật (SecurityConfig file) để triển khai xác thực và phân quyền trên hệ thống
+	- Fix bug sai tên database khi dùng lên "use" trong SQL script
+	- Fix bug sai tên database khi dung fleen "use" trong script SQL
+	- Thay đổi database schema (thêm cột daily_fee và discount trong table boarding_records)
+	- Loại bỏ code dư thừa
+	- Formating code
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ...
+- **Ref mục Quyết định thiết kế (nếu có):** 2.2
 
 ---
 
@@ -145,6 +175,12 @@ Branch: `java-web/exam`
 - **Quyết định của tôi:** thêm column expected_check_out kiểu DATE với constrant NOT NULL trong database để giải quyết vấn đề này
 - **Lý do chọn:** dữ liệu được lưu bền vững trong database và cách thực hiện đơn giãn, tăng khả năng mở rộng cho hệ thống nếu trong tương lai muốn thêm tính năng chỉnh sửa ngày dự kiến check out
 - **Thay đổi schema (nếu có):** expected_check_out
+
+### 2.2 Không có column nào trong database để biết chi phí hằng ngày và discount của phiếu gửi là bao nhiều, không thể triển khai một số API 
+- **Vấn đề:** Không có column nào trong database để biết chi phí hằng ngày và discount của phiếu gửi là bao nhiều, không thể triển khai một số API (ví dụ lấy ước tính chi phí của phiếu gửi tin đến ngày hiện tại)
+- **Quyết định của tôi:** thêm column daily_fee kiểu BIGINT với constrant NOT NULL và column discount BIGINT trong database để giải quyết vấn đề này
+- **Lý do chọn:** dữ liệu được lưu bền vững trong database, cho phép triển khai một số API hay thực hiện một số requirement
+- **Thay đổi schema (nếu có):** thêm column daily_fee và discount trong table boarding_records
 
 ---
 

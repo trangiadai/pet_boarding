@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 import training.javaweb.exam.enums.BoardingStatus;
 
@@ -29,6 +28,11 @@ public class BoardingRecordRequestDTO {
 	@Schema(description = "The expected check out day", example = "2026-08-23")
 	private LocalDate expectedCheckOut;
 
+	@NotNull(message = "The daily fee of the boarding record cannot be empty")
+	@Positive(message = "The daily fee must be greater than 0")
+	@Schema(description = "The daily fee per day", example = "100000")
+	private Long dailyFee;
+
 	@NotNull(message = "The boarding status can't be empty or invalid value")
 	@Schema(description = "The type of boarding status", example = "BOARDING")
 	private BoardingStatus status;
@@ -37,7 +41,7 @@ public class BoardingRecordRequestDTO {
 	private String notes;
 
 	@NotNull(message = "BoardingRecordRequest's createdAt can not be empty")
-	@PastOrPresent(message = "Input time is invalid value, it must be before current time")
+	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
 	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
 	private LocalDateTime createdAt;
 
@@ -50,12 +54,13 @@ public class BoardingRecordRequestDTO {
 		return true;
 	}
 
-	public BoardingRecordRequestDTO(Long petId, LocalDate checkInDate, LocalDate expectedCheckOut,
+	public BoardingRecordRequestDTO(Long petId, LocalDate checkInDate, LocalDate expectedCheckOut, Long dailyFee,
 			BoardingStatus status, String notes, LocalDateTime createdAt) {
 		super();
 		this.petId = petId;
 		this.checkInDate = checkInDate;
 		this.expectedCheckOut = expectedCheckOut;
+		this.dailyFee = dailyFee;
 		this.status = status;
 		this.notes = notes;
 		this.createdAt = createdAt;
@@ -88,6 +93,14 @@ public class BoardingRecordRequestDTO {
 
 	public void setExpectedCheckOut(LocalDate expectedCheckOut) {
 		this.expectedCheckOut = expectedCheckOut;
+	}
+
+	public Long getDailyFee() {
+		return dailyFee;
+	}
+
+	public void setDailyFee(Long dailyFee) {
+		this.dailyFee = dailyFee;
 	}
 
 	public String getNotes() {

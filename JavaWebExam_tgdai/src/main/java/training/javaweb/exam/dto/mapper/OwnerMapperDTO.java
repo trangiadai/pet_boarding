@@ -9,6 +9,7 @@ import training.javaweb.exam.entity.Owner;
 import training.javaweb.exam.entity.Pet;
 
 public class OwnerMapperDTO {
+	
 	public static OwnerResponseDTO toOwnerResponse(Owner owner) {
 		if (owner == null) {
 			return null;
