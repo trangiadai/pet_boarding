@@ -15,10 +15,6 @@ import java.util.*;
 public class DashboardService {
 	private final DashboardRepository dashboardRepository;
 
-	public DashboardService(DashboardRepository dashboardRepository) {
-		this.dashboardRepository = dashboardRepository;
-	}
-
 	public DashboardOverviewResponseDTO getOverview() {
 		DashboardOverviewResponseDTO dto = new DashboardOverviewResponseDTO();
 
@@ -90,4 +86,10 @@ public class DashboardService {
 		}
 		return map;
 	}
+
+	public DashboardService(DashboardRepository dashboardRepository) {
+		super();
+		this.dashboardRepository = dashboardRepository;
+	}
+
 }

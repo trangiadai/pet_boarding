@@ -12,5 +12,4 @@ public interface CareNoteMapper {
 
 	List<CareNote> getCareNotesByBoardingRecordId(Map<String, Object> param);
 
-	Long getOwnerIdByBoardingRecordId(Map<String, Object> param);
 }

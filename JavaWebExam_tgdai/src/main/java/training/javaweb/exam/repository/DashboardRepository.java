@@ -12,10 +12,6 @@ import java.util.Map;
 public class DashboardRepository {
 	private final DashboardMapper dashboardMapper;
 
-	public DashboardRepository(DashboardMapper dashboardMapper) {
-		this.dashboardMapper = dashboardMapper;
-	}
-
 	public long getTotalOwners() {
 		return dashboardMapper.getTotalOwners();
 	}
@@ -55,4 +51,10 @@ public class DashboardRepository {
 		param.put("year", year);
 		return dashboardMapper.getQuarterlyRevenue(param);
 	}
+
+	public DashboardRepository(DashboardMapper dashboardMapper) {
+		super();
+		this.dashboardMapper = dashboardMapper;
+	}
+
 }

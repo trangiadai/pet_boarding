@@ -41,18 +41,15 @@ public class BoardingRecordMapperDTO {
 	}
 
 	public static BoardingRecord toBoardingRecord(BoardingRecordRequestDTO boardingRecordRequest) {
-		if (boardingRecordRequest == null)
-			return null;
+	    if (boardingRecordRequest == null)
+	        return null;
 
-		BoardingRecord boardingRecord = new BoardingRecord();
-		boardingRecord.setPetId(boardingRecordRequest.getPetId());
-		boardingRecord.setCheckInDate(boardingRecordRequest.getCheckInDate());
-		boardingRecord.setExpectedCheckOut(boardingRecordRequest.getExpectedCheckOut());
-		boardingRecord.setDailyFee(boardingRecordRequest.getDailyFee());
-		boardingRecord.setStatus(boardingRecordRequest.getStatus().name());
-		boardingRecord.setNotes(boardingRecordRequest.getNotes());
-		boardingRecord.setCreatedAt(boardingRecordRequest.getCreatedAt());
+	    BoardingRecord boardingRecord = new BoardingRecord();
+	    boardingRecord.setPetId(boardingRecordRequest.getPetId());
+	    boardingRecord.setDailyFee(boardingRecordRequest.getDailyFee());
+	    boardingRecord.setStatus(boardingRecordRequest.getStatus().name());
+	    boardingRecord.setNotes(boardingRecordRequest.getNotes());
 
-		return boardingRecord;
+	    return boardingRecord;
 	}
 }

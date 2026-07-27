@@ -24,83 +24,60 @@
         </association>
     </resultMap>
 
-    <select id="getAllPets" resultMap="PetWithOwnerAndStatusResultMap">
-        SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-            
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at,
+    <sql id="petColumns">
+        p.id AS pet_id,
+        p.name AS pet_name,
+        p.type AS pet_type,
+        p.breed AS pet_breed,
+        p.age AS pet_age,
+        p.weight AS pet_weight,
+        p.image_url AS pet_image_url,
+        p.owner_id AS pet_owner_id,
+        p.created_at AS pet_created_at
+    </sql>
 
+    <sql id="ownerColumns">
+        o.id AS owner_id,
+        o.name AS owner_name,
+        o.phone AS owner_phone,
+        o.email AS owner_email,
+        o.address AS owner_address,
+        o.created_at AS owner_created_at
+    </sql>
+
+    <sql id="petWithOwnerAndStatusSelect">
+        SELECT
+            <include refid="petColumns" />,
+            <include refid="ownerColumns" />,
             br.status AS boarding_status
         FROM pets p
         INNER JOIN owners o ON p.owner_id = o.id
         LEFT JOIN boarding_records br ON p.id = br.pet_id AND br.status = 'BOARDING'
+    </sql>
+
+    <select id="getAllPets" resultMap="PetWithOwnerAndStatusResultMap">
+        <include refid="petWithOwnerAndStatusSelect" />
         ORDER BY p.id DESC
     </select>
 
     <select id="getPetById" parameterType="map" resultMap="PetWithOwnerAndStatusResultMap">
-        SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-            
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at,
-
-            br.status AS boarding_status
-        FROM pets p
-        INNER JOIN owners o ON p.owner_id = o.id
-        LEFT JOIN boarding_records br ON p.id = br.pet_id AND br.status = 'BOARDING'
+        <include refid="petWithOwnerAndStatusSelect" />
         WHERE p.id = #{id}
     </select>
 
     <select id="getPetByPetNameAndTypeAndOwnerId" parameterType="map" resultMap="PetWithOwnerAndStatusResultMap">
         SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at
+            <include refid="petColumns" />,
+            <include refid="ownerColumns" />
         FROM pets p
         INNER JOIN owners o ON p.owner_id = o.id
-        WHERE p.name = #{petName} AND LOWER(p.type) = LOWER(#{petType}) AND o.id = #{ownerId} 
+        WHERE p.name = #{petName} 
+          AND LOWER(p.type) = LOWER(#{petType}) 
+          AND o.id = #{ownerId} 
     </select>
 
     <insert id="createPet" parameterType="map" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO pets (name, type, breed, age, weight, image_url, owner_id, created_at)
+        INSERT INTO pets (name, type, breed, age, weight, image_url, owner_id)
         VALUES (
             #{name}, 
             #{type}, 
@@ -108,8 +85,7 @@
             #{age}, 
             #{weight},
             #{imageUrl}, 
-            #{ownerId}, 
-            #{createdAt}
+            #{ownerId}
         )
     </insert>
 
@@ -131,28 +107,7 @@
     </delete>
 
     <select id="findPetsFiltered" parameterType="map" resultMap="PetWithOwnerAndStatusResultMap">
-        SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-            
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at,
-
-            br.status AS boarding_status
-        FROM pets p
-        INNER JOIN owners o ON p.owner_id = o.id
-        LEFT JOIN boarding_records br ON p.id = br.pet_id AND br.status = 'BOARDING'
+        <include refid="petWithOwnerAndStatusSelect" />
         <where>
             <if test="types != null and types.size() > 0">
                 UPPER(p.type) IN 
@@ -165,28 +120,7 @@
     </select>
 
     <select id="searchPetByOwnerName" parameterType="map" resultMap="PetWithOwnerAndStatusResultMap">
-        SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-            
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at,
-
-            br.status AS boarding_status
-        FROM pets p
-        INNER JOIN owners o ON p.owner_id = o.id
-        LEFT JOIN boarding_records br ON p.id = br.pet_id AND br.status = 'BOARDING'
+        <include refid="petWithOwnerAndStatusSelect" />
         <where>
             <if test="ownerName != null and ownerName.trim() != ''">
                 UPPER(o.name) LIKE CONCAT('%', UPPER(#{ownerName}), '%')
@@ -196,28 +130,7 @@
     </select>
 
     <select id="getPetsByOwnerId" parameterType="map" resultMap="PetWithOwnerAndStatusResultMap">
-        SELECT
-            p.id AS pet_id,
-            p.name AS pet_name,
-            p.type AS pet_type,
-            p.breed AS pet_breed,
-            p.age AS pet_age,
-            p.weight AS pet_weight,
-            p.image_url AS pet_image_url,
-            p.owner_id AS pet_owner_id,
-            p.created_at AS pet_created_at,
-
-            o.id AS owner_id,
-            o.name AS owner_name,
-            o.phone AS owner_phone,
-            o.email AS owner_email,
-            o.address AS owner_address,
-            o.created_at AS owner_created_at,
-
-            br.status AS boarding_status
-        FROM pets p
-        INNER JOIN owners o ON p.owner_id = o.id
-        LEFT JOIN boarding_records br ON p.id = br.pet_id AND br.status = 'BOARDING'
+        <include refid="petWithOwnerAndStatusSelect" />
         WHERE o.id = #{ownerId}
     </select>
 

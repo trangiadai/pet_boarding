@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,11 +49,6 @@ public class PetRequestDTO {
 	@Schema(description = "The id of owner of the pet", example = "1")
 	private Long ownerId;
 
-	@NotNull(message = "Pet's createdAt can not be empty")
-	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
-	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
-	private LocalDateTime createdAt;
-
 	public PetRequestDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -70,7 +64,6 @@ public class PetRequestDTO {
 		this.weight = weight;
 		this.imageUrl = imageUrl;
 		this.ownerId = ownerId;
-		this.createdAt = createdAt;
 	}
 
 	public String getName() {
@@ -127,14 +120,6 @@ public class PetRequestDTO {
 
 	public void setOwnerId(Long ownerId) {
 		this.ownerId = ownerId;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
 	}
 
 }

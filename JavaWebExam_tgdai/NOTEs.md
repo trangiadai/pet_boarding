@@ -164,8 +164,28 @@ Branch: `java-web/exam`
 - **Khó khăn:** Không có.
 - **Cách giải quyết:**: Không gặp khó khăn.
 - **Commit:**
-  - ...
+  - f914618e8b
 - **Ref mục Quyết định thiết kế (nếu có):** 2.2
+
+### Day 10 — 27/07/2026
+- **Đã làm:**
+	- Thêm UI cho toàn bộ website và toàn bộ tính năng
+	- Fix bug logic của method updatePetById trong PetService
+	- Thay đổi BoardingRecordRequestDTO, BoardingRecordMapperDTO, BoardingRecordService để cho phép hệ thống tự tạo ra giá trị cho những trường checkin, check out, 	expected check out time
+	- Thay đổi CheckOutRequestDTO để cho phép hệ thống tự tạo giá trị cho trường thời gian thực tế trả phiếu gửi
+	- Thay đổi validation cho field email trong OwnerRequestDTO
+	- Thay đổi validation cho field password trong UserRequestDTO
+	- Bỏ field "createdAt" khỏi các request DTO, để cho database tự tạo giá trị cho field này
+	- Thay đổi cấu hình security để tích hợp UI và hệ thống, fix bug thứ tự của requestMatchers(
+	- Refactor code (trong những file .xml, repository, service)
+	- Loại bỏ code dư thừa
+	- Formating code
+	- Cập nhật NOTEs.md
+- **Khó khăn:** Không có.
+- **Cách giải quyết:**: Không gặp khó khăn.
+- **Commit:**
+  - ...
+- **Ref mục Quyết định thiết kế (nếu có):** Không có
 
 ---
 

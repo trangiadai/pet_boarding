@@ -30,7 +30,7 @@ public class UserController {
 	@ApiResponse(responseCode = "201", description = "Customer credentials created.")
 	@ApiResponse(responseCode = "400", description = "Payload schema field rule constraint violation caught.", content = @Content(schema = @Schema(implementation = ValidationErrorDetail.class)))
 	public UserResponseDTO createCustomerAccount(@Valid @RequestBody UserRequestDTO userRequest) {
-		return userService.createCustomerAccount(userRequest);
+		return userService.createUserAccount(userRequest);
 	}
 
 	public UserController(UserService userService) {

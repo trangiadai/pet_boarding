@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import training.javaweb.exam.dao.mapper.UserMapper;
 import training.javaweb.exam.entity.User;
@@ -20,17 +19,22 @@ public class UserRepository {
 		return userMapper.findByUsername(param);
 	}
 
-	@Transactional
-	public int createCustomerAccount(User user) {
+	public int createUserAccount(User user) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("username", user.getUsername());
 		param.put("password", user.getPassword());
 		param.put("role", user.getRole());
 		param.put("ownerId", user.getOwnerId());
 		param.put("enabled", user.getEnable());
-		param.put("createdAt", user.getCreatedAt());
 
 		return userMapper.createUserAccount(param);
+	}
+	
+	public int deleteUserByOwnerId(Long ownerId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("ownerId", ownerId);
+		
+		return userMapper.deleteUserByOwnerId(param);
 	}
 
 	public UserRepository(UserMapper userMapper) {

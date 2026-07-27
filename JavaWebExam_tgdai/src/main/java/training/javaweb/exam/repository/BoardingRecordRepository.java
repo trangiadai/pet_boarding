@@ -27,7 +27,6 @@ public class BoardingRecordRepository {
 		param.put("totalFee", boardingRecord.getTotalFee());
 		param.put("status", boardingRecord.getStatus());
 		param.put("notes", boardingRecord.getNotes());
-		param.put("createdAt", boardingRecord.getCreatedAt());
 
 		boardingRecordMapper.createRecord(param);
 		return ((Number) param.get("id")).longValue();

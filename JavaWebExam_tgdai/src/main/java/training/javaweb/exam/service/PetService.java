@@ -20,10 +20,10 @@ public class PetService {
 	private PetRepository petRepository;
 
 	public PetResponseDTO createPet(PetRequestDTO petRequest) {
-		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getType().name(),
+		Pet pet = petRepository.getPetByPetNameAndTypeAndOwnerId(petRequest.getName(), petRequest.getType().name(),
 				petRequest.getOwnerId());
 		if (pet != null) {
-			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
+			throw new IllegalArgumentException("One owner can't have 2 pets be the same name and type");
 		}
 
 		return PetMapperDTO.toPetResponse(petRepository.createPet(PetMapperDTO.toPet(petRequest)));
@@ -46,10 +46,10 @@ public class PetService {
 			throw new RuntimeException("Pet with ID " + id + " not found.");
 		}
 
-		Pet pet = petRepository.getPetByPetNameAndOwnerId(petRequest.getName(), petRequest.getType().name(),
+		Pet pet = petRepository.getPetByPetNameAndTypeAndOwnerId(petRequest.getName(), petRequest.getType().name(),
 				petRequest.getOwnerId());
-		if (pet != null) {
-			throw new IllegalArgumentException("One owner can't have 2 pets be the same name");
+		if (pet != null && pet.getId() != id) {
+			throw new IllegalArgumentException("One owner can't have 2 pets be the same name and type");
 		}
 
 		existingPet.setName(petRequest.getName());
@@ -66,8 +66,6 @@ public class PetService {
 
 	@Transactional
 	public int deletePetById(Long id) {
-		// TODO: adding delete boarding record when delete pet, and sum total the number
-		// of row is affected
 		Pet existing = petRepository.getPetById(id);
 		if (existing == null) {
 			throw new RuntimeException("Pet with ID " + id + " not found.");
@@ -108,6 +106,11 @@ public class PetService {
 		return petRepository.getPetsByOwnerId(ownerId).stream().map(pet -> {
 			return PetMapperDTO.toPetResponse(pet);
 		}).collect(Collectors.toList());
+	}
+	
+	public int deletePetsByOwnerId(Long ownerId) {
+		
+		return petRepository.deletePetsByOwnerId(ownerId);
 	}
 
 	public PetService(PetRepository petRepository) {

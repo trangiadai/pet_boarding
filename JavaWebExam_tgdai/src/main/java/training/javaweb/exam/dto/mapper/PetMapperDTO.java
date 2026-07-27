@@ -53,7 +53,6 @@ public class PetMapperDTO {
 		pet.setWeight(petRequest.getWeight());
 		pet.setImageUrl(petRequest.getImageUrl());
 		pet.setOwnerId(petRequest.getOwnerId());
-		pet.setCreatedAt(petRequest.getCreatedAt());
 
 		return pet;
 	}

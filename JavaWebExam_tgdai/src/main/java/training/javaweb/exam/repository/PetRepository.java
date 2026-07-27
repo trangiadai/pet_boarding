@@ -22,7 +22,6 @@ public class PetRepository {
 		param.put("weight", pet.getWeight());
 		param.put("imageUrl", pet.getImageUrl());
 		param.put("ownerId", pet.getOwnerId());
-		param.put("createdAt", pet.getCreatedAt());
 
 		petMapper.createPet(param);
 		Number generatedId = (Number) param.get("id");
@@ -42,7 +41,7 @@ public class PetRepository {
 		return petMapper.getPetById(param);
 	}
 
-	public Pet getPetByPetNameAndOwnerId(String petName, String petType, Long ownerId) {
+	public Pet getPetByPetNameAndTypeAndOwnerId(String petName, String petType, Long ownerId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("petName", petName);
 		param.put("petType", petType);
@@ -98,6 +97,13 @@ public class PetRepository {
 		param.put("ownerId", ownerId);
 
 		return petMapper.getPetsByOwnerId(param);
+	}
+	
+	public int deletePetsByOwnerId(Long ownerId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("ownerId", ownerId);
+		
+		return petMapper.deletePetsByOwnerId(param);
 	}
 
 	public PetRepository(PetMapper petMapper) {

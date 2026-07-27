@@ -3,7 +3,6 @@ package training.javaweb.exam.dto.request;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +10,7 @@ import jakarta.validation.constraints.Size;
 
 public class UserRequestDTO {
 	@NotBlank(message = "User's password can not be empty or just a space/tab")
-	@Size(max = 255, message = "The maximun characters for user's password is 255")
+	@Size(min = 6, max = 255, message = "The maximun characters for user's password is 255, the minimun is 6")
 	@Schema(description = "The password of the user account", example = "letmein")
 	private String password;
 
@@ -24,11 +23,6 @@ public class UserRequestDTO {
 	@Schema(description = "The status of user account", example = "true")
 	private Boolean enable;
 
-	@NotNull(message = "User's createdAt can not be empty")
-	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
-	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
-	private LocalDateTime createdAt;
-
 	public UserRequestDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -39,7 +33,6 @@ public class UserRequestDTO {
 		this.password = password;
 		this.ownerId = ownerId;
 		this.enable = enable;
-		this.createdAt = createdAt;
 	}
 
 	public String getPassword() {
@@ -65,13 +58,4 @@ public class UserRequestDTO {
 	public void setEnable(Boolean enable) {
 		this.enable = enable;
 	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
 }

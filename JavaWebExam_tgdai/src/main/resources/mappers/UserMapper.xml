@@ -3,14 +3,13 @@
 
 <mapper namespace="training.javaweb.exam.dao.mapper.UserMapper">
 	<insert id="createUserAccount" parameterType="map" useGeneratedKeys="true" keyProperty="id">
-	    INSERT INTO users (username, password, role, owner_id, enabled, created_at)
+	    INSERT INTO users (username, password, role, owner_id, enabled)
 	    VALUES (
 	        #{username},
 	        #{password},
 	        #{role},
 	        #{ownerId},
-	        #{enabled},
-	        #{createdAt}
+	        #{enabled}
 	    )
 	</insert>
 

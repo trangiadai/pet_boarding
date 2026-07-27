@@ -2,13 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="training.javaweb.exam.dao.mapper.CareNoteMapper">
 
-	<insert id="createCareNote" parameterType="map" useGeneratedKeys="true"
-		keyProperty="id">
-		INSERT INTO care_notes (boarding_record_id, note, created_at)
+	<insert id="createCareNote" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO care_notes (boarding_record_id, note)
 		VALUES (
 			#{boardingRecordId}, 
-			#{note}, 
-			#{createdAt}
+			#{note}
 		)
 	</insert>
 
@@ -21,13 +19,6 @@
 		FROM care_notes
 		WHERE boarding_record_id = #{boardingRecordId}
 		ORDER BY created_at DESC
-	</select>
-
-	<select id="getOwnerIdByBoardingRecordId" parameterType="map" resultType="java.lang.Long">
-		SELECT p.owner_id
-		FROM boarding_records b
-		INNER JOIN pets p ON b.pet_id = p.id
-		WHERE b.id = #{boardingRecordId}
 	</select>
 
 </mapper>

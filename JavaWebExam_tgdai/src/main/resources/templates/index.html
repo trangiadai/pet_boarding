@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PawTrack · Quản lý dịch vụ gửi thú cưng</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+	<div id="view-login">
+		<div class="auth__brand">
+			<div class="brand-mark">
+				<div class="box" id="brand-paw"></div><span>PawTrack</span>
+			</div>
+			<div class="auth__quote">
+				<h1>Chăm sóc từng<br>chiếc chân nhỏ,<br>theo dõi từng ngày.</h1>
+				<p>Nền tảng quản lý dịch vụ gửi thú cưng — từ hồ sơ chủ nuôi, phiếu gửi đến ghi chú chăm sóc hằng ngày,
+					tất cả ở một nơi.</p>
+			</div>
+			<div class="auth__foot">Đăng nhập bằng tài khoản do quản trị viên cấp.</div>
+		</div>
+		<div class="auth__form-wrap">
+			<form class="auth__form" id="login-form" autocomplete="off">
+				<h2>Đăng nhập</h2>
+				<p class="sub">Nhập tên đăng nhập và mật khẩu để tiếp tục.</p>
+				<div class="auth__error" id="login-error"></div>
+				<div class="field">
+					<label for="username">Tên đăng nhập <span class="req">*</span></label>
+					<input class="input" id="username" placeholder="SĐT hoặc tên đăng nhập" required>
+					<div class="field-error" id="username-err"></div>
+				</div>
+				<div class="field">
+					<label for="password">Mật khẩu <span class="req">*</span></label>
+					<input class="input" id="password" type="password" placeholder="••••••••" required>
+					<div class="field-error" id="password-err"></div>
+				</div>
+				<button type="submit" class="btn btn-accent full-btn" id="submit-btn">Đăng nhập</button>
+				<div class="auth__hint">Hệ thống sẽ tự động nhận diện vai trò (Quản trị viên / Chủ nuôi) dựa trên tài
+					khoản của bạn.</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="app" id="view-app" hidden>
+		<div id="sidebar-root"></div>
+
+		<main class="main">
+			<section class="view" id="route-admin-dashboard" hidden>
+				<div class="page-head">
+					<h1>Dashboard</h1>
+					<div class="page-head__actions">
+						<button class="btn btn-primary" data-open-create-boarding></button>
+					</div>
+				</div>
+				<div class="tabs"><button class="tab is-active">Tổng quan</button></div>
+				<div class="stats-grid" id="dash-stats"></div>
+				<div class="layout-2col">
+					<div class="panel">
+						<div class="panel__head">
+							<h3>Phiếu gửi gần đây <span class="cell-sub" id="dash-recent-count"></span></h3>
+							<div class="filter-bar" id="dash-recent-filters"></div>
+						</div>
+						<div class="table-wrap" style="border:none;box-shadow:none;">
+							<table>
+								<thead>
+									<tr>
+										<th>Thú cưng</th>
+										<th>Chủ nuôi</th>
+										<th>Check-in</th>
+										<th>Trạng thái</th>
+										<th>Phí</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody id="dash-recent-body"></tbody>
+							</table>
+						</div>
+					</div>
+					<div style="display:flex;flex-direction:column;gap:16px;">
+						<div class="panel">
+							<div class="panel__head">
+								<h3>Doanh thu năm nay</h3><span class="cell-primary num" id="dash-revenue-total"></span>
+							</div>
+							<div class="bars" id="dash-revenue-bars"></div>
+						</div>
+						<div class="panel">
+							<div class="panel__head">
+								<h3>Phân bố loài</h3>
+							</div>
+							<div id="dash-distribution"></div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="view" id="route-admin-owners" hidden>
+				<div class="page-head">
+					<h1>Chủ nuôi</h1>
+					<div class="page-head__actions">
+						<div class="search"><input class="input" id="owners-search" placeholder="Tìm tên, SĐT..."></div>
+						<button class="btn btn-primary" id="owners-open-add"></button>
+					</div>
+				</div>
+				<div class="tabs"><button class="tab is-active">Tất cả <span class="count"
+							id="owners-total-count">0</span></button></div>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th class="sortable" id="owners-sort-name">HỌ TÊN ⇅</th>
+								<th>ĐIỆN THOẠI</th>
+								<th>EMAIL</th>
+								<th>THÚ CƯNG</th>
+								<th>TÀI KHOẢN</th>
+								<th>THAO TÁC</th>
+							</tr>
+						</thead>
+						<tbody id="owners-body"></tbody>
+					</table>
+				</div>
+				<div class="pager" id="owners-pager"></div>
+			</section>
+
+			<section class="view" id="route-admin-pets" hidden>
+				<div class="page-head">
+					<h1>Thú cưng</h1>
+					<div class="page-head__actions">
+						<div class="search"><input class="input" id="pets-search"
+								placeholder="Tìm tên thú cưng hoặc chủ nuôi..."></div>
+						<button class="btn btn-primary" id="pets-open-add"></button>
+					</div>
+				</div>
+				<div class="filter-bar" id="pets-type-filters" style="margin-bottom:18px;"></div>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>THÚ CƯNG</th>
+								<th>LOẠI</th>
+								<th>GIỐNG</th>
+								<th>TUỔI</th>
+								<th>CÂN NẶNG</th>
+								<th>CHỦ NUÔI</th>
+								<th>TRẠNG THÁI</th>
+								<th>THAO TÁC</th>
+							</tr>
+						</thead>
+						<tbody id="pets-body"></tbody>
+					</table>
+				</div>
+				<div class="pager" id="pets-pager"></div>
+			</section>
+
+			<section class="view" id="route-admin-boarding" hidden>
+				<div class="page-head">
+					<h1>Phiếu gửi</h1>
+					<div class="page-head__actions">
+						<div class="search"><input class="input" id="brec-search"
+								placeholder="Tìm thú cưng, chủ nuôi..."></div>
+						<button class="btn btn-primary" data-open-create-boarding></button>
+					</div>
+				</div>
+				<div class="tabs" id="brec-tabs"></div>
+				<div class="filter-panel">
+					<div class="filter-panel__row">
+						<div class="field">
+							<label>Loại thú cưng</label>
+							<select class="input" id="brec-type-filter">
+								<option value="">Tất cả loại</option>
+								<option value="DOG">🐶 Dog</option>
+								<option value="CAT">🐱 Cat</option>
+								<option value="BIRD">🐦 Bird</option>
+								<option value="RABBIT">🐰 Rabbit</option>
+								<option value="OTHER">🐾 Other</option>
+							</select>
+						</div>
+						<div class="field">
+							<label>Chủ nuôi</label>
+							<select class="input" id="brec-owner-filter">
+								<option value="">Tất cả chủ nuôi</option>
+							</select>
+						</div>
+						<div class="field"><label>Từ ngày check-in</label><input type="date" class="input"
+								id="brec-from-date"></div>
+						<div class="field"><label>Đến ngày check-in</label><input type="date" class="input"
+								id="brec-to-date"></div>
+						<div class="field-error" id="brec-date-err" style="flex-basis:100%;"></div>
+						<button class="btn btn-ghost btn-sm" id="brec-clear-filters" style="align-self:flex-end;">Xóa
+							lọc</button>
+					</div>
+				</div>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>THÚ CƯNG</th>
+								<th>CHỦ NUÔI</th>
+								<th>CHECK-IN</th>
+								<th>DỰ KIẾN TRẢ</th>
+								<th>THỰC TẾ TRẢ</th>
+								<th>TỔNG PHÍ</th>
+								<th>TRẠNG THÁI</th>
+								<th>THAO TÁC</th>
+							</tr>
+						</thead>
+						<tbody id="brec-body"></tbody>
+					</table>
+				</div>
+				<div class="pager" id="brec-pager"></div>
+			</section>
+
+			<section class="view" id="route-admin-reports" hidden>
+				<div class="page-head">
+					<h1>Báo cáo</h1>
+				</div>
+				<div class="tabs"><button class="tab is-active" id="reports-year-label">Tổng quan</button></div>
+				<div class="stats-grid" id="reports-stats"></div>
+				<div class="layout-2col">
+					<div class="panel">
+						<div class="panel__head">
+							<h3>Doanh thu theo tháng</h3>
+							<div class="filter-bar">
+								<select class="input" id="reports-year-select"></select>
+								<button class="chip is-active" data-g="month" id="reports-chip-month">Theo
+									tháng</button>
+								<button class="chip" data-g="quarter" id="reports-chip-quarter">Theo quý</button>
+							</div>
+						</div>
+						<div class="bars" id="reports-revenue-bars"></div>
+					</div>
+					<div class="panel">
+						<div class="panel__head">
+							<h3>Phân bố thú cưng</h3>
+						</div>
+						<div id="reports-distribution"></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="view" id="route-customer-pets" hidden>
+				<div class="page-head">
+					<h1>Thú cưng của tôi</h1>
+					<div class="page-head__actions">
+						<div class="search"><input class="input" id="cpets-search" placeholder="Tìm theo tên..."></div>
+					</div>
+				</div>
+				<div class="stats-grid" id="cpets-stats"></div>
+				<div class="filter-bar" id="cpets-type-filters" style="margin-bottom:18px;"></div>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>THÚ CƯNG</th>
+								<th>LOẠI</th>
+								<th>GIỐNG</th>
+								<th>TUỔI</th>
+								<th>CÂN NẶNG</th>
+								<th>TRẠNG THÁI</th>
+								<th>THAO TÁC</th>
+							</tr>
+						</thead>
+						<tbody id="cpets-body"></tbody>
+					</table>
+				</div>
+			</section>
+
+			<section class="view" id="route-customer-boarding" hidden>
+				<div class="page-head">
+					<h1>Đang gửi</h1>
+				</div>
+				<div class="tabs"><button class="tab is-active">Thú cưng đang gửi <span class="count"
+							id="cbrec-count">0</span></button></div>
+				<div class="boarding-cards" id="cbrec-cards"></div>
+			</section>
+
+			<section class="view" id="route-customer-history" hidden>
+				<div class="page-head">
+					<h1>Lịch sử gửi</h1>
+					<div class="page-head__actions">
+						<div class="search"><input class="input" id="chist-search"
+								placeholder="Tìm theo tên thú cưng..."></div>
+					</div>
+				</div>
+				<div class="tabs"><button class="tab is-active">Tất cả lịch sử <span class="count"
+							id="chist-count">0</span></button></div>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>THÚ CƯNG</th>
+								<th>CHECK-IN</th>
+								<th>NGÀY TRẢ</th>
+								<th>SỐ NGÀY</th>
+								<th>TỔNG PHÍ</th>
+								<th>TRẠNG THÁI</th>
+								<th>THAO TÁC</th>
+							</tr>
+						</thead>
+						<tbody id="chist-body"></tbody>
+					</table>
+				</div>
+			</section>
+
+		</main>
+	</div>
+
+	<div class="modal-overlay" id="modal-owner-form">
+		<div class="modal">
+			<div class="modal__head">
+				<h2 id="of-title">Thêm chủ nuôi</h2><button class="modal__close"
+					onclick="closeModal('modal-owner-form')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="field"><label>Họ tên <span class="req">*</span></label><input class="input" id="of-name"
+						placeholder="Nguyễn Văn A" maxlength="100">
+					<div class="field-error" id="of-name-err"></div>
+				</div>
+				<div class="field-row">
+					<div class="field"><label>Điện thoại <span class="req">*</span></label><input class="input"
+							id="of-phone" placeholder="0901234567" maxlength="20">
+						<div class="field-error" id="of-phone-err"></div>
+					</div>
+					<div class="field"><label>Email</label><input class="input" id="of-email"
+							placeholder="email@example.com" maxlength="100">
+						<div class="field-error" id="of-email-err"></div>
+					</div>
+				</div>
+				<div class="field"><label>Địa chỉ</label><input class="input" id="of-address"
+						placeholder="123 Đường ABC, TP.HCM" maxlength="255">
+					<div class="field-error" id="of-address-err"></div>
+				</div>
+				<hr class="field-divider">
+				<div id="of-account-section"></div>
+			</div>
+			<div class="modal__foot">
+				<button class="btn btn-ghost" onclick="closeModal('modal-owner-form')">Hủy</button>
+				<button class="btn btn-primary" id="of-submit"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-owner-detail">
+		<div class="modal">
+			<div class="modal__head">
+				<h2 id="od-name"></h2><button class="modal__close" onclick="closeModal('modal-owner-detail')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="detail-list" id="od-fields"></div>
+			</div>
+			<div class="modal__foot" style="justify-content:space-between;">
+				<button class="btn btn-ghost" onclick="closeModal('modal-owner-detail')">Đóng</button>
+				<button class="btn btn-primary" id="od-edit-btn"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-pet-form">
+		<div class="modal">
+			<div class="modal__head">
+				<h2 id="pf-title">Thêm thú cưng</h2><button class="modal__close"
+					onclick="closeModal('modal-pet-form')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="field"><label>Chủ nuôi <span class="req">*</span></label><select class="input"
+						id="pf-owner"></select>
+					<div class="field-error" id="pf-owner-err"></div>
+				</div>
+				<div class="field-row">
+					<div class="field"><label>Tên thú cưng <span class="req">*</span></label><input class="input"
+							id="pf-name" placeholder="Milo, Kiki..." maxlength="100">
+						<div class="field-error" id="pf-name-err"></div>
+					</div>
+					<div class="field"><label>Loại <span class="req">*</span></label>
+						<select class="input" id="pf-type">
+							<option value="">-- Chọn --</option>
+							<option value="DOG">Dog</option>
+							<option value="CAT">Cat</option>
+							<option value="BIRD">Bird</option>
+							<option value="RABBIT">Rabbit</option>
+							<option value="OTHER">Other</option>
+						</select>
+						<div class="field-error" id="pf-type-err"></div>
+					</div>
+				</div>
+				<div class="field"><label>Giống</label><input class="input" id="pf-breed"
+						placeholder="Golden Retriever, Poodle..." maxlength="100">
+					<div class="field-error" id="pf-breed-err"></div>
+				</div>
+				<div class="field-row">
+					<div class="field"><label>Tuổi (năm) <span class="req">*</span></label><input class="input"
+							type="number" min="0" max="500" step="1" id="pf-age" placeholder="2">
+						<div class="field-error" id="pf-age-err"></div>
+					</div>
+					<div class="field"><label>Cân nặng (kg) <span class="req">*</span></label><input class="input"
+							type="number" min="0.01" max="999.99" step="0.01" id="pf-weight" placeholder="4.5">
+						<div class="field-error" id="pf-weight-err"></div>
+					</div>
+				</div>
+				<div class="field"><label>Ảnh (URL)</label><input class="input" id="pf-image" placeholder="https://..."
+						maxlength="500">
+					<div class="field-error" id="pf-image-err"></div>
+				</div>
+			</div>
+			<div class="modal__foot">
+				<button class="btn btn-ghost" onclick="closeModal('modal-pet-form')">Hủy</button>
+				<button class="btn btn-primary" id="pf-submit"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-pet-detail">
+		<div class="modal">
+			<div class="modal__head">
+				<h2 id="pd-name"></h2><button class="modal__close" onclick="closeModal('modal-pet-detail')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="detail-list" id="pd-fields"></div>
+			</div>
+			<div class="modal__foot"><button class="btn btn-ghost"
+					onclick="closeModal('modal-pet-detail')">Đóng</button></div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-view-pet">
+		<div class="modal">
+			<div class="modal__head">
+				<h2 id="vp-name"></h2><button class="modal__close" onclick="closeModal('modal-view-pet')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="detail-list" id="vp-fields"></div>
+			</div>
+			<div class="modal__foot"><button class="btn btn-ghost" onclick="closeModal('modal-view-pet')">Đóng</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-create-boarding">
+		<div class="modal">
+			<div class="modal__head">
+				<h2>Tạo phiếu gửi mới</h2><button class="modal__close"
+					onclick="closeModal('modal-create-boarding')"></button>
+			</div>
+
+			<div class="modal__body">
+				<div class="field"><label>Thú cưng <span class="req">*</span></label><select class="input"
+						id="cb-pet"></select>
+					<div class="field-error" id="cb-pet-err"></div>
+				</div>
+				<div class="field-row">
+					<div class="field"><label>Số ngày dự kiến <span class="req">*</span></label><input type="number"
+							min="1" max="3652" step="1" class="input" id="cb-days" placeholder="3">
+						<div class="field-error" id="cb-days-err"></div>
+					</div>
+					<div class="field"><label>Đơn giá / ngày (đ) <span class="req">*</span></label><input type="number"
+							min="1" step="1" class="input" id="cb-fee" placeholder="150000">
+						<div class="field-error" id="cb-fee-err"></div>
+					</div>
+				</div>
+				<div class="field-hint" id="cb-preview" style="margin-bottom:16px;"></div>
+				<div class="field"><label>Ghi chú</label><textarea class="input" id="cb-note"
+						placeholder="Dặn dò đặc biệt..."></textarea></div>
+			</div>
+			<div class="modal__foot">
+				<button class="btn btn-ghost" onclick="closeModal('modal-create-boarding')">Hủy</button>
+				<button class="btn btn-primary" id="cb-submit"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-boarding-detail">
+		<div class="modal modal-wide">
+			<div class="modal__head">
+				<h2>Chi tiết phiếu gửi</h2><button class="modal__close"
+					onclick="closeModal('modal-boarding-detail')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="detail-list" id="bd-fields"></div>
+				<div class="notes-title" id="bd-notes-title"></div>
+				<div id="bd-notes"></div>
+				<div class="note-add-row"><input class="input" id="bd-note-input"
+						placeholder="Thêm ghi chú chăm sóc..."><button class="btn btn-ghost btn-sm"
+						id="bd-note-add"></button></div>
+			</div>
+			<div class="modal__foot">
+				<button class="btn btn-ghost" onclick="closeModal('modal-boarding-detail')">Đóng</button>
+				<button class="btn btn-accent" id="bd-checkout-btn"></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-view-boarding">
+		<div class="modal modal-wide">
+			<div class="modal__head">
+				<h2>Chi tiết phiếu gửi</h2><button class="modal__close"
+					onclick="closeModal('modal-view-boarding')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="detail-list" id="vb-fields"></div>
+				<div class="notes-title" id="vb-notes-title"></div>
+				<div id="vb-notes"></div>
+			</div>
+			<div class="modal__foot"><button class="btn btn-ghost"
+					onclick="closeModal('modal-view-boarding')">Đóng</button></div>
+		</div>
+	</div>
+
+	<div class="modal-overlay" id="modal-checkout">
+		<div class="modal">
+			<div class="modal__head">
+				<h2>Check-out thú cưng</h2><button class="modal__close" onclick="closeModal('modal-checkout')"></button>
+			</div>
+			<div class="modal__body">
+				<div class="pin-note" id="co-hint" style="margin-bottom:16px;"></div>
+				<div class="field"><label>Đơn giá / ngày (đ) <span class="req">*</span></label><input type="number"
+						min="1" step="1" class="input" id="co-fee">
+					<div class="field-error" id="co-fee-err"></div>
+				</div>
+				<div class="detail-list" id="co-preview"></div>
+			</div>
+			<div class="modal__foot">
+				<button class="btn btn-ghost" onclick="closeModal('modal-checkout')">Hủy</button>
+				<button class="btn btn-accent" id="co-submit"></button>
+			</div>
+		</div>
+	</div>
+
+	<div id="toast-root"></div>
+
+	<script th:src="@{/js/app.js}"></script>
+</body>
+
+</html>

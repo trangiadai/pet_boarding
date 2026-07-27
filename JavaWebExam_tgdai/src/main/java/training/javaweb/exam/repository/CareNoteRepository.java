@@ -13,15 +13,10 @@ import training.javaweb.exam.entity.CareNote;
 public class CareNoteRepository {
 	private final CareNoteMapper careNoteMapper;
 
-	public CareNoteRepository(CareNoteMapper careNoteMapper) {
-		this.careNoteMapper = careNoteMapper;
-	}
-
 	public Long createCareNote(CareNote careNote) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("boardingRecordId", careNote.getBoardingRecordId());
 		param.put("note", careNote.getNote());
-		param.put("createdAt", careNote.getCreatedAt());
 		careNoteMapper.createCareNote(param);
 
 		return ((Number) param.get("id")).longValue();
@@ -32,10 +27,9 @@ public class CareNoteRepository {
 		param.put("boardingRecordId", boardingRecordId);
 		return careNoteMapper.getCareNotesByBoardingRecordId(param);
 	}
-
-	public Long getOwnerIdByBoardingRecordId(Long boardingRecordId) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("boardingRecordId", boardingRecordId);
-		return careNoteMapper.getOwnerIdByBoardingRecordId(param);
+	
+	public CareNoteRepository(CareNoteMapper careNoteMapper) {
+		this.careNoteMapper = careNoteMapper;
 	}
+
 }

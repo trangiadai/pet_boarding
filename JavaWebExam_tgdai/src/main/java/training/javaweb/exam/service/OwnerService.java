@@ -17,6 +17,7 @@ import training.javaweb.exam.repository.OwnerRepository;
 public class OwnerService {
 	private final OwnerRepository ownerRepository;
 	private final UserService userService;
+	private final PetService petService;
 
 	public List<OwnerResponseDTO> getAllOwners() {
 		List<OwnerResponseDTO> ownerResponses = ownerRepository.getAllOwners().stream().map(owner -> {
@@ -39,7 +40,7 @@ public class OwnerService {
 		UserRequestDTO userRequest = ownerRequest.getUserRequest();
 		if (userRequest != null) {
 			userRequest.setOwnerId(ownerReponse.getId());
-			userService.createCustomerAccount(userRequest);
+			userService.createUserAccount(userRequest);
 		}
 
 		return OwnerMapperDTO.toOwnerResponse(ownerRepository.getOwnerById(ownerReponse.getId()));
@@ -67,18 +68,25 @@ public class OwnerService {
 	}
 
 	@Transactional
-	public int deleteOwnerById(Long id) {
-		Owner existingOwner = ownerRepository.getOwnerById(id);
+	public int deleteOwnerById(Long ownerId) {
+		Owner existingOwner = ownerRepository.getOwnerById(ownerId);
 		if (existingOwner == null) {
-			throw new RuntimeException("Owner profile not found with ID: " + id);
+			throw new RuntimeException("Owner profile not found with ID: " + ownerId);
 		}
-		return ownerRepository.deleteOwnerById(id);
+
+		// Delete child records first to satisfy foreign key constraints
+		int deletedPetsCount = petService.deletePetsByOwnerId(ownerId);
+		int deletedUserCount = userService.deleteUserByOwnerId(ownerId);
+		int deletedOwnerCount = ownerRepository.deleteOwnerById(ownerId);
+
+		return deletedPetsCount + deletedUserCount + deletedOwnerCount;
 	}
 
-	public OwnerService(OwnerRepository ownerRepository, UserService userService) {
+	public OwnerService(OwnerRepository ownerRepository, UserService userService, PetService petService) {
 		super();
 		this.ownerRepository = ownerRepository;
 		this.userService = userService;
+		this.petService = petService;
 	}
 
 }

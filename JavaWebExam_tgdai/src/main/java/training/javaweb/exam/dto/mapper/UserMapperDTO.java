@@ -17,7 +17,6 @@ public class UserMapperDTO {
 		user.setRole(UserRole.ROLE_CUSTOMER.name());
 		user.setOwnerId(userRequest.getOwnerId());
 		user.setEnable(userRequest.getEnable());
-		user.setCreatedAt(userRequest.getCreatedAt());
 
 		return user;
 	}

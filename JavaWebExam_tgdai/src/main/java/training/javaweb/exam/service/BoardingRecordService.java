@@ -16,37 +16,36 @@ import training.javaweb.exam.dto.request.SearchRequestParam;
 import training.javaweb.exam.dto.response.BoardingRecordResponseDTO;
 import training.javaweb.exam.dto.response.FeeResult;
 import training.javaweb.exam.dto.response.MyActiveBoardingResponseDTO;
-//import training.javaweb.exam.dto.response.MyActiveBoardingResponseDTO;
+import training.javaweb.exam.dto.response.PetResponseDTO;
 import training.javaweb.exam.entity.BoardingRecord;
-import training.javaweb.exam.entity.Pet;
 import training.javaweb.exam.enums.BoardingStatus;
 import training.javaweb.exam.repository.BoardingRecordRepository;
-import training.javaweb.exam.repository.PetRepository;
 import training.javaweb.exam.security.CustomUserDetails;
 import training.javaweb.exam.utils.FeeCalculator;
 
 @Service
 public class BoardingRecordService {
-
 	private final BoardingRecordRepository boardingRecordRepository;
-	private final PetRepository petRepository;
+	private final PetService petService;
 
 	@Transactional
 	public BoardingRecordResponseDTO createRecord(BoardingRecordRequestDTO request) {
-		Pet pet = petRepository.getPetById(request.getPetId());
-		if (pet == null) {
+		PetResponseDTO petResponse = petService.getPetById(request.getPetId());
+		if (petResponse == null) {
 			throw new IllegalArgumentException("Pet not found with ID: " + request.getPetId());
 		}
 		if (boardingRecordRepository.getActiveBoardingRecordsByPetId(request.getPetId()) != null) {
-			throw new IllegalArgumentException(
-					"This pet is already BOARDING, can't not create another boarding record");
+			throw new IllegalArgumentException("This pet is already BOARDING, can't create another boarding record");
 		}
 
 		BoardingRecord record = BoardingRecordMapperDTO.toBoardingRecord(request);
 
-		long expectedDays = ChronoUnit.DAYS.between(request.getCheckInDate(), request.getExpectedCheckOut());
-		if (expectedDays <= 0)
-			expectedDays = 1;
+		LocalDate checkInDate = LocalDate.now();
+		long expectedDays = request.getExpectedNumberOfDayService();
+		LocalDate expectedCheckOut = checkInDate.plusDays(expectedDays);
+
+		record.setCheckInDate(checkInDate);
+		record.setExpectedCheckOut(expectedCheckOut);
 
 		long initialBaseFee = expectedDays * request.getDailyFee();
 		record.setBaseFee(initialBaseFee);
@@ -82,13 +81,13 @@ public class BoardingRecordService {
 			throw new IllegalStateException("Pet has already been returned.");
 		}
 
+		LocalDate actualCheckOut = LocalDate.now();
 		long dailyFee = (request.getDailyFee() != null) ? request.getDailyFee() : record.getDailyFee();
-
 		FeeResult result = FeeCalculator.calculateCheckOutFee(record.getCheckInDate(), record.getExpectedCheckOut(),
-				request.getActualCheckOut(), dailyFee);
+				actualCheckOut, dailyFee);
 
-		boardingRecordRepository.checkOut(request.getBoardingRecordId(), request.getActualCheckOut(), result.baseFee,
-				result.lateFee, result.discountAmount, result.totalFee, BoardingStatus.RETURNED.name());
+		boardingRecordRepository.checkOut(request.getBoardingRecordId(), actualCheckOut, result.baseFee, result.lateFee,
+				result.discountAmount, result.totalFee, BoardingStatus.RETURNED.name());
 
 		return getRecordById(request.getBoardingRecordId());
 	}
@@ -175,10 +174,10 @@ public class BoardingRecordService {
 				}).collect(Collectors.toList());
 	}
 
-	public BoardingRecordService(BoardingRecordRepository boardingRecordRepository, PetRepository petRepository) {
+	public BoardingRecordService(BoardingRecordRepository boardingRecordRepository, PetService petService) {
 		super();
 		this.boardingRecordRepository = boardingRecordRepository;
-		this.petRepository = petRepository;
+		this.petService = petService;
 	}
 
 }

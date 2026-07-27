@@ -19,7 +19,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public UserResponseDTO createCustomerAccount(UserRequestDTO userRequest) {
+	public UserResponseDTO createUserAccount(UserRequestDTO userRequest) {
 		String password = userRequest.getPassword();
 		Owner owner = ownerRepository.getOwnerById(userRequest.getOwnerId());
 		if (owner == null) {
@@ -34,9 +34,14 @@ public class UserService {
 		User user = UserMapperDTO.toUser(userRequest);
 		user.setUsername(username);
 		user.setPassword(passwordEncoder.encode(password));
-		userRepository.createCustomerAccount(user);
+		userRepository.createUserAccount(user);
 
 		return UserMapperDTO.toUserReponse(user);
+	}
+	
+	public int deleteUserByOwnerId(Long ownerId) {
+		
+		return userRepository.deleteUserByOwnerId(ownerId);
 	}
 
 	public UserService(UserRepository userRepository, OwnerRepository ownerRepository,

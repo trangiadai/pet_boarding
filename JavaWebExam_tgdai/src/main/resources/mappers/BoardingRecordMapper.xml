@@ -88,7 +88,7 @@
 
     <insert id="createRecord" parameterType="map" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO boarding_records (pet_id, check_in_date, expected_check_out,
-			daily_fee,base_fee, late_fee, discount, total_fee, status, notes, created_at) 
+			daily_fee,base_fee, late_fee, discount, total_fee, status, notes) 
 		VALUES (
 			#{petId}, 
 			#{checkInDate}, 
@@ -99,8 +99,7 @@
 			#{discount}, 
 			#{totalFee}, 
 			#{status}, 
-			#{notes},
-			#{createdAt}
+			#{notes}
 		)
 	</insert>
 	

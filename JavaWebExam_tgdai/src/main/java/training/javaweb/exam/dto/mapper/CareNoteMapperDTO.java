@@ -10,7 +10,6 @@ public class CareNoteMapperDTO {
 		CareNote careNote = new CareNote();
 		careNote.setBoardingRecordId(careNoteRequest.getBoardingRecordId());
 		careNote.setNote(careNoteRequest.getNote());
-		careNote.setCreatedAt(careNoteRequest.getCreatedAt());
 
 		return careNote;
 	}

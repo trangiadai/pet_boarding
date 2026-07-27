@@ -3,10 +3,9 @@ package training.javaweb.exam.dto.request;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -22,8 +21,8 @@ public class OwnerRequestDTO {
 	@Schema(description = "The phone number of the owner", example = "0123456789")
 	private String phone;
 
-	@Size(max = 100, message = "The maximun number characters for owner's email is 100")
-	@Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", message = "Owner's email must be valid format example@email.com")
+	@Size(max = 100, message = "The maximum number of characters for owner's email is 100")
+	@Email(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[^@\\s]+\\.[^@\\s]+$", message = "Owner's email must be a valid format, e.g., example@email.com")
 	@Schema(description = "The email of the owner", example = "example@email.com")
 	private String email;
 
@@ -31,11 +30,7 @@ public class OwnerRequestDTO {
 	@Schema(description = "The address of the owner", example = "123 ABC, Q4, TP.HCM")
 	private String address;
 
-	@NotNull(message = "Owner's createdAt can not be empty")
-	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
-	@Schema(description = "The date of owner infomation when it is created", example = "2026-07-13T09:47:48")
-	private LocalDateTime createdAt;
-
+	@Valid
 	@Schema(description = "The account information of owner")
 	private UserRequestDTO userRequest;
 
@@ -50,7 +45,6 @@ public class OwnerRequestDTO {
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
-		this.createdAt = createdAt;
 		this.userRequest = userRequest;
 	}
 
@@ -84,14 +78,6 @@ public class OwnerRequestDTO {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	public UserRequestDTO getUserRequest() {

@@ -1,13 +1,9 @@
 package training.javaweb.exam.dto.request;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import training.javaweb.exam.enums.BoardingStatus;
@@ -18,15 +14,11 @@ public class BoardingRecordRequestDTO {
 	@Schema(description = "The id of the pet", example = "11")
 	private Long petId;
 
-	@NotNull(message = "The check in day can not be empty")
-	@FutureOrPresent(message = "Input time is invalid value, it must be after current time")
-	@Schema(description = "The check in date", example = "2026-07-30")
-	private LocalDate checkInDate;
-
-	@NotNull(message = "The expected check out time can not be empty")
-	@FutureOrPresent(message = "The expected check out time is invalid value, it must be after or equal to the check in day")
-	@Schema(description = "The expected check out day", example = "2026-08-23")
-	private LocalDate expectedCheckOut;
+	@NotNull(message = "The expected number of day for using the service")
+	@Positive(message = "The number of day must be > 0")
+	@Max(value = 3652, message = "The maximum number of day is 3652 days (10 years)")
+	@Schema(description = "The expected number of day for using the service", example = "2")
+	private Long expectedNumberOfDayService;
 
 	@NotNull(message = "The daily fee of the boarding record cannot be empty")
 	@Positive(message = "The daily fee must be greater than 0")
@@ -40,30 +32,14 @@ public class BoardingRecordRequestDTO {
 	@Schema(description = "The note of boarding record", example = "This is note")
 	private String notes;
 
-	@NotNull(message = "BoardingRecordRequest's createdAt can not be empty")
-	@FutureOrPresent(message = "Input time is invalid value, it must be current time")
-	@Schema(description = "The formal entry date of batch into system logs", example = "2026-07-13T09:47:48")
-	private LocalDateTime createdAt;
-
-	@JsonIgnore
-	@AssertTrue(message = "The expected check out date must be after or equal to the check in day")
-	public boolean isDateRangeValid() {
-		if (checkInDate != null && expectedCheckOut != null) {
-			return !expectedCheckOut.isBefore(checkInDate);
-		}
-		return true;
-	}
-
-	public BoardingRecordRequestDTO(Long petId, LocalDate checkInDate, LocalDate expectedCheckOut, Long dailyFee,
-			BoardingStatus status, String notes, LocalDateTime createdAt) {
+	public BoardingRecordRequestDTO(Long petId, Long expectedNumberOfDayService, Long dailyFee, BoardingStatus status,
+			String notes, LocalDateTime createdAt) {
 		super();
 		this.petId = petId;
-		this.checkInDate = checkInDate;
-		this.expectedCheckOut = expectedCheckOut;
+		this.expectedNumberOfDayService = expectedNumberOfDayService;
 		this.dailyFee = dailyFee;
 		this.status = status;
 		this.notes = notes;
-		this.createdAt = createdAt;
 	}
 
 	public BoardingRecordRequestDTO() {
@@ -79,20 +55,12 @@ public class BoardingRecordRequestDTO {
 		this.petId = petId;
 	}
 
-	public LocalDate getCheckInDate() {
-		return checkInDate;
+	public Long getExpectedNumberOfDayService() {
+		return expectedNumberOfDayService;
 	}
 
-	public void setCheckInDate(LocalDate checkInDate) {
-		this.checkInDate = checkInDate;
-	}
-
-	public LocalDate getExpectedCheckOut() {
-		return expectedCheckOut;
-	}
-
-	public void setExpectedCheckOut(LocalDate expectedCheckOut) {
-		this.expectedCheckOut = expectedCheckOut;
+	public void setExpectedNumberOfDayService(Long expectedNumberOfDayService) {
+		this.expectedNumberOfDayService = expectedNumberOfDayService;
 	}
 
 	public Long getDailyFee() {
@@ -117,14 +85,6 @@ public class BoardingRecordRequestDTO {
 
 	public void setStatus(BoardingStatus status) {
 		this.status = status;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
 	}
 
 }
